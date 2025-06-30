@@ -29,6 +29,7 @@ class Usuario():
     tipo_usuario = int
     perfil_usuario= int
     contrasenna = str
+    ARCHIVO = "datos_usuarios.npy"
 
     # CONSTRUCTOR
     def __init__(self, nombre="", identificacion=0, contrasenna='', direccion="", telefono="", email="", multa=0, tipo_usuario=-1, perfil_usuario=-1):
@@ -186,3 +187,31 @@ class Usuario():
                     return
                 case _:
                     input("Opción incorrecta. Inténtelo nuevamente. Presione enter para continuar...")
+
+    def mostrar_datos(self):
+        print(f"Identificación: {self.identificacion}")
+        print(f"Contraseña: {self.identificacion}")
+        print(f"Nombre completo: {self.nombre}")
+        print(f"Dirección: {self.direccion.lower()}")
+        print(f"Teléfono: {self.telefono}")
+        print(f"Email registrado: {self.email.lower()}")
+        print("=" * 50)
+        match self.tipo_usuario:
+            case 1:
+                print(f"Tipo de usuario: Estudiante")
+            case 2:
+                print(f"Tipo de usuario: Empleado")
+
+        match self.perfil_usuario:
+            case 1:
+                print(f"Perfil de usuario: Administrador")
+            case 2:
+                print(f"Perfil de usuario: Bibliotecario")
+            case 3:
+                print(f"Perfil de usuario: Usuario")
+
+    def consultar_indice(self, arreglo):
+        for i in range(len(arreglo)):
+            if arreglo[i].identificacion == self.identificacion:
+                return i
+        return None

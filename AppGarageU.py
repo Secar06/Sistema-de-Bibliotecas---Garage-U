@@ -1,6 +1,7 @@
 import numpy as np
 from Recurso import Recurso
 from Usuario import Usuario
+from Funcionalidades import *
 
 class AppGarageU():
     """ En esta clase llamada AppGarageU se lleva a cabo las funcionalidades del programa, como registrar un nuevo usuario, verificar el usuario,
@@ -26,17 +27,59 @@ class AppGarageU():
     MAX_USUARIOS = 100
 
     def __init__(self):
-        self.arreglo_usuarios = np.full(self.MAX_RECURSOS, fill_value = None, dtype= object)
+        # Carga los usuarios almacenados en el archivo de usuarios
+        self.arreglo_usuarios, self.contador_usuarios = self.cargar_datos(Usuario.ARCHIVO, self.MAX_USUARIOS)
+
         self.arreglo_recursos = np.full(self.MAX_USUARIOS, fill_value = None, dtype= object)
 
-        self.arreglo_usuarios[0] = Usuario(nombre = "Administrador", identificacion=000, contrasenna='000')
-        self.arreglo_usuarios[0].cambiar_perfil(self.PERFIL_ADMIN)
-        self.contador_usuarios = 1
+        if self.contador_usuarios == 0:
+            self.arreglo_usuarios[0] = Usuario(nombre = "Administrador", identificacion=000, contrasenna='000')
+            self.arreglo_usuarios[0].cambiar_perfil(self.PERFIL_ADMIN)
+            self.contador_usuarios = 1
+
         self.contador_recursos = 0
 
-
-
         self.usuario_autenticado = None
+
+    def cargar_datos(self, archivo, num_max_datos):
+        """ Este método carga los datos de un archivo, en un arreglo específico
+
+            PARAMS
+                archivo = URL relativa del archivo a abrir
+                num_max_datos = indica el tamaño máximo de datos que almacena el arreglo
+
+            RETURNS
+                arreglo_de_datos = arreglo con los datos cargados
+                num_datos = cantidad de datos cargados en el arreglo
+        """
+        try:
+            arreglo_de_datos = np.load(archivo, allow_pickle=True)
+            i = 0
+            while arreglo_de_datos[i] != None:
+                i += 1
+            return arreglo_de_datos, i
+        except (FileNotFoundError, EOFError):
+            print (f"No se pudo cargar el archivo {archivo}. Se creó un arreglo de datos vacío!")
+            arreglo_de_datos = np.full(num_max_datos, fill_value=None, dtype=object)
+            return arreglo_de_datos, 0
+
+    def guardar_datos(self, arreglo_de_datos, archivo):
+        """ Este método almacena los datos de un arreglo en un archivo
+
+            PARAMS
+                arreglo_de_datos = arreglo Numpy con los datos a alamcenar
+                archivo = URL relativa del archivo en el que se almacenarán los datos
+
+            RETURNS
+                True si almacena los datos correctamente en el archivo
+                False si no logra almacenar los datos en el archivo
+        """
+        try:
+            np.save(archivo, arreglo_de_datos)
+            return True
+        except (FileNotFoundError, EOFError):
+            print (f"Error: no se pudieron almacenar los  datos en el archivo {archivo}.")
+            return False
 
     def registrar_usuario(self):
         """
@@ -56,28 +99,17 @@ class AppGarageU():
             self.arreglo_usuarios[self.contador_usuarios] = user
             self.contador_usuarios += 1
 
+            # Guarda en el archivo los datos de los usuarios
+            if not self.guardar_datos(self.arreglo_usuarios, Usuario.ARCHIVO):
+                print("No se pudo guardar el archivo de usaurios")
+            else:
+                print("\nSe actualizó el archivo de usuarios")
+
+            print(self.arreglo_usuarios)
+
             print("\n[ADMIN] ¡Usuario Registrado Exitosamente!")
             print("=" * 50)
-            print(f"Identificación: {user.identificacion}")
-            print(f"Contraseña: {user.identificacion}")
-            print(f"Nombre completo: {user.nombre}")
-            print(f"Dirección: {user.direccion.lower()}")
-            print(f"Teléfono: {user.telefono}")
-            print(f"Email registrado: {user.email.lower()}")
-            print("=" * 50)
-            match user.tipo_usuario:
-                case 1:
-                    print(f"Tipo de usuario: Estudiante")
-                case 2:
-                    print(f"Tipo de usuario: Empleado")
-
-            match user.perfil_usuario:
-                case 1:
-                    print(f"Perfil de usuario: Administrador")
-                case 2:
-                    print(f"Perfil de usuario: Bibliotecario")
-                case 3:
-                    print(f"Perfil de usuario: Usuario")
+            user.mostrar_datos()
             print("=" * 40)
             input("Presione Enter para continuar...")
         else:
@@ -94,7 +126,15 @@ class AppGarageU():
             for i in range(self.contador_usuarios):
                 usuario = self.arreglo_usuarios[i]
                 if usuario.identificacion == id_a_buscar:
-                    return usuario.actualizar_datos(self.usuario_autenticado)
+                    usuario.actualizar_datos(self.usuario_autenticado)
+                    self.arreglo_usuarios[i] = usuario
+
+                    # Guarda en el archivo los datos de los usuarios
+                    if not self.guardar_datos(self.arreglo_usuarios, Usuario.ARCHIVO):
+                        print("No se pudo guardar el archivo de usaurios")
+                    else:
+                        print("\nSe actualizó el archivo de usuarios")
+
             input(f"\n[ADMIN] No se encontró un usuario identificado con: {id_a_buscar}. Presione Enter para continuar...")
             print("\n"*20)
         else:
@@ -195,6 +235,16 @@ class AppGarageU():
             match option:
                 case 1:
                     self.usuario_autenticado.actualizar_datos(self.usuario_autenticado)
+
+                    indice = self.usuario_autenticado.consultar_indice(arreglo=self.arreglo_usuarios)
+
+                    self.arreglo_usuarios[indice] = self.usuario_autenticado
+
+                    # Guarda en el archivo los datos de los usuarios
+                    if not self.guardar_datos(self.arreglo_usuarios, Usuario.ARCHIVO):
+                        print("No se pudo guardar el archivo de usaurios")
+                    else:
+                        print("\nSe actualizó el archivo de usuarios")
                 case 2:
                     input("\nSe ha cerrado la sesión correctamente. Presione Enter para continuar...")
                 case _:
@@ -226,7 +276,7 @@ class AppGarageU():
                     print("\n" + "=" * 50)
                     print(" MENÚ DE ADMINISTRADOR - MODIFICACIÓN DE REGISTROS ")
                     print("=" * 50)
-                    input("\n[ADMIN] Ha seleccionado la opción 2. Presione Enter para continuar...") 
+                    input("\n[ADMIN] Ha seleccionado la opción 2. Presione Enter para continuar...")
                     user_id = int(input("\nDigite el número de documento del usuario: "))
                     self.modificar_usuario(user_id)
                     print("\n"*20)
@@ -310,13 +360,13 @@ class AppGarageU():
 
             match opc:
                 case 1:
-                    if (self.verificar_usuario()):
+                    if self.verificar_usuario():
                         print(f"\n¡Inicio de sesión exitoso! Bienvenid@ {self.usuario_autenticado.nombre.title()}")
-                        if (self.usuario_autenticado.perfil_usuario == self.PERFIL_ADMIN):
+                        if self.usuario_autenticado.perfil_usuario == self.PERFIL_ADMIN:
                             self.mostrar_menu_admin()
-                        elif (self.usuario_autenticado.perfil_usuario == self.PERFIL_BIBLIO):
+                        elif self.usuario_autenticado.perfil_usuario == self.PERFIL_BIBLIO:
                             self.mostrar_menu_biblio()
-                        elif (self.usuario_autenticado.perfil_usuario == self.PERFIL_USUARIO):
+                        elif self.usuario_autenticado.perfil_usuario == self.PERFIL_USUARIO:
                             self.mostrar_menu_usuario()
                         else:
                             print("PERFIL NO RECONOCIDO")
