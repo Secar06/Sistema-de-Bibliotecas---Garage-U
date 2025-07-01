@@ -1,16 +1,20 @@
+from Recurso import Recurso
 """
 Autor: Sebastian Cardona, Henry Hincapié
 Fecha: 01/06/2025
 """
-class Revista:
+class Revista(Recurso):
         """
         Representa una revista como recurso bibliográfico, con sus datos editoriales.
         """
 
-        def __init__(self, ISSN=0, editorial="", volumen=0, numero=0, anno_publicacion=0):
+        def __init__(self, ISSN=0, editorial="", volumen=0, numero=0, anno_publicacion=0, numero_inventario=-1, titulo="", coleccion=0,
+                 estado=0, tipo_recurso=0, codigo_alfnum=""):
             """
             Inicializa un objeto Revista con los campos bibliográficos requeridos.
             """
+            super().__init__(numero_inventario, titulo, coleccion,
+                 estado, tipo_recurso, codigo_alfnum)
             self.ISSN = ISSN
             self.editorial = editorial
             self.volumen = volumen
@@ -21,6 +25,7 @@ class Revista:
             """
             Solicita al usuario los datos de la revista, incluyendo ISSN y año de publicación.
             """
+            super().solicitar_datos
             self.ISSN = int(input("Digíte el número ISSN de la revista: "))
             self.editorial = input("Escriba el nombre de la editorial de la revista: ")
             self.volumen = int(input("Digíte el volúmen de la revista: "))
