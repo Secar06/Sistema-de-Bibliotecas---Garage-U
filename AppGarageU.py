@@ -42,7 +42,7 @@ class AppGarageU():
         self.usuario_autenticado = None
 
     def cargar_datos(self, archivo, num_max_datos):
-        """ Este método carga los datos de un archivo, en un arreglo específico
+        """ Este metodo carga los datos de un archivo, en un arreglo específico
 
             PARAMS
                 archivo = URL relativa del archivo a abrir
@@ -117,7 +117,7 @@ class AppGarageU():
 
     def eliminar_usuario(self):
         """Elimina un usuario del arreglo de usuario."""
-        pass
+
 
     def validar_usuario(self, id_a_buscar):
         for i in range(self.contador_usuarios):
@@ -189,7 +189,7 @@ class AppGarageU():
             print(f"\n¡El recurso con número de inventario {recurso.numero_inventario} ha sido registrado correctamente!")
             print("=" * 50)
             print(f"Titulo: {recurso.titulo}")
-            match recurso.coleccion :
+            match recurso.coleccion:
                 case 1:
                     print("Tipo de recurso: GENERAL")
                 case 2:
