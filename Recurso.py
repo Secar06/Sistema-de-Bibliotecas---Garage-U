@@ -45,7 +45,7 @@ class Recurso:
                 if self.coleccion in [1, 2, 3, 4]:
                     break
                 else:
-                    print("El tipo de colección ingresado es incorrecto, por favor intente nuevamente...")
+                    print("El estado ingresado es incorrecto, por favor intente nuevamente...")
             except ValueError:
                 print("El tipo de dato ingresado es erróneo, por favor ingrese un número (1, 2, 3 o 4).")
 
