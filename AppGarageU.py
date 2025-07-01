@@ -115,6 +115,10 @@ class AppGarageU():
         else:
             print("No se puede realizar el registro del usuario.\nCausa: almacenamiento insuficiente en el sistema.")
 
+    def eliminar_usuario(self):
+        """Elimina un usuario del arreglo de usuario."""
+        pass
+
     def validar_usuario(self, id_a_buscar):
         for i in range(self.contador_usuarios):
             if self.arreglo_usuarios[i].identificacion == id_a_buscar:
