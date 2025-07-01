@@ -27,7 +27,16 @@ class Libro(Recurso):
         """
         super().solicitar_datos()
         self.autor = input("Ingrese el nombre del autor: ")
-        self.isbn = int(input("Ingrese el número ISBN: "))
+        while True:
+            try:
+                self.isbn = int(input("Ingrese el número ISBN: "))
+                break
+            except ValueError:
+                print("Entrada inválida. Por favor, ingrese un número entero para el ISBN.")
         self.editorial = input("Ingrese la editorial del libro: ")
-        self.edicion = int(input("Ingrese el número de edición del libro: "))
-        
+        while True:
+            try:
+                self.edicion = int(input("Ingrese el número de edición del libro: "))
+                break
+            except ValueError:
+                print("Entrada inválida. Por favor, ingrese un número entero para la edición.")

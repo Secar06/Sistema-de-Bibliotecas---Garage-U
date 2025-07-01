@@ -26,4 +26,9 @@ class Audio(Recurso):
         super().solicitar_datos()
         self.nom_cantante = input("Escriba el nombre del cantante: ")
         self.nom_productor = input("Escriba el nombre del productor: ")
-        self.year_grabacion = int(input("Digíte el año en que se grabó el audio: "))
+        while True:
+            try:
+                self.year_grabacion = int(input("Digíte el año en que se grabó el audio: "))
+                break
+            except ValueError:
+                print("Entrada inválida. Por favor, ingrese un número entero para el año.")

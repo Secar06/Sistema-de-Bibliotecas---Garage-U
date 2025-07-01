@@ -27,7 +27,12 @@ class Video(Recurso):
         super().solicitar_datos()
         self.nom_productor = input("Ingrese el nombre del productor: ")
         self.nom_director = input("Ingrese el nombre del director: ")
-        self.año_grabacion = int(input("Ingrese el año de grabación del video: "))
+        while True:
+            try:
+                self.year_grabacion = int(input("Ingrese el año de grabación del video: "))
+                break
+            except ValueError:
+                print("Entrada inválida. Por favor, ingrese un número entero para el año de grabación.")
 
         print("Ingrese el género del video: \n1. DOCUMENTAL \n2. COMEDIA \n3. TERROR \n4. ACCIÓN")
         while True:
@@ -40,9 +45,6 @@ class Video(Recurso):
             except ValueError:
                 print("El tipo de dato ingresado es erróneo, por favor ingrese un número (1, 2, 3 o 4).")
 
-        """while self.genero not in [1, 2, 3, 4]:
-            input("El género es incorrecto, intente nuevamente...")
-            print("Ingrese el género del video: \n1. DOCUMENTAL \n2. COMEDIA \n3. TERROR \n4. ACCIÓN")
-            self.genero = int(input("Seleccione una opción del menú: "))"""
+
 
     
