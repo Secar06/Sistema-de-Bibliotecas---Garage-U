@@ -24,7 +24,7 @@ class Video(Recurso):
         """
         Solicita al usuario los datos del video y valida el género.
         """
-        super().solicitar_datos
+        super().solicitar_datos()
         self.nom_productor = input("Ingrese el nombre del productor: ")
         self.nom_director = input("Ingrese el nombre del director: ")
         self.año_grabacion = int(input("Ingrese el año de grabación del video: "))

@@ -25,7 +25,7 @@ class Libro(Recurso):
         """
         Solicita al usuario los datos del libro mediante entrada por consola.
         """
-        super().solicitar_datos
+        super().solicitar_datos()
         self.autor = input("Ingrese el nombre del autor: ")
         self.isbn = int(input("Ingrese el número ISBN: "))
         self.editorial = input("Ingrese la editorial del libro: ")

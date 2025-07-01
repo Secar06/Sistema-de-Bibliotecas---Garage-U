@@ -1,5 +1,9 @@
 import numpy as np
 from Recurso import Recurso
+from Audio import Audio
+from Libro import Libro
+from Revista import Revista
+from Video import Video
 from Usuario import Usuario
 from Funcionalidades import *
 
@@ -174,17 +178,58 @@ class AppGarageU():
         junto con su número de inventario.
         """
         print("\n" + "=" * 50)
+        
         print("   MENÚ DE BIBLIOTECARIO - REGISTRO DE RECURSO ")
         print("=" * 50)
         if self.contador_recursos < self.MAX_RECURSOS:
-            recurso = Recurso()
-            recurso.solicitar_datos()
-            recurso.numero_inventario = self.contador_recursos + 1
-            self.arreglo_recursos[self.contador_recursos] = recurso
-            self.contador_recursos += 1
-            print(f"\n¡El recurso con número de inventario {recurso.numero_inventario} ha sido registrado correctamente!")
-            print("=" * 50)
-            print(f"Titulo: {recurso.titulo}")
+            print("\nIngrese El tipo de recurso:\n1. Libro\n2. Revista\n3. Video\n4. Audio")
+            while True:
+                try:
+                    tipo_recurso = int(input("Seleccione una opcion del menú: "))
+                    if tipo_recurso in [1, 2, 3, 4]:
+                        break
+                    else:
+                        print("El estado ingresado es incorrecto, por favor intente nuevamente...")
+                except ValueError:
+                    print("El tipo de dato ingresado es erróneo, por favor ingrese un número (1, 2, 3 o 4).")
+            match tipo_recurso:
+                case 1:
+                    recurso = Libro()
+                    recurso.almacenar_datos()
+                    recurso.numero_inventario = self.contador_recursos + 1
+                    self.arreglo_recursos[self.contador_recursos] = recurso
+                    self.contador_recursos += 1
+                    print(f"\n¡El recurso con número de inventario {recurso.numero_inventario} ha sido registrado correctamente!")
+                    print("=" * 50)
+                    print(f"Titulo: {recurso.titulo}")
+                case 2:
+                    recurso = Revista()
+                    recurso.almacenar_datos()
+                    recurso.numero_inventario = self.contador_recursos + 1
+                    self.arreglo_recursos[self.contador_recursos] = recurso
+                    self.contador_recursos += 1
+                    print(f"\n¡El recurso con número de inventario {recurso.numero_inventario} ha sido registrado correctamente!")
+                    print("=" * 50)
+                    print(f"Titulo: {recurso.titulo}")
+                case 3:
+                    recurso = Video()
+                    recurso.almacenar_datos()
+                    recurso.numero_inventario = self.contador_recursos + 1
+                    self.arreglo_recursos[self.contador_recursos] = recurso
+                    self.contador_recursos += 1
+                    print(f"\n¡El recurso con número de inventario {recurso.numero_inventario} ha sido registrado correctamente!")
+                    print("=" * 50)
+                    print(f"Titulo: {recurso.titulo}")
+                case 4:
+                    recurso = Audio()
+                    recurso.almacenar_datos()
+                    recurso.numero_inventario = self.contador_recursos + 1
+                    self.arreglo_recursos[self.contador_recursos] = recurso
+                    self.contador_recursos += 1
+                    print(f"\n¡El recurso con número de inventario {recurso.numero_inventario} ha sido registrado correctamente!")
+                    print("=" * 50)
+                    print(f"Titulo: {recurso.titulo}")
+                
             match recurso.coleccion :
                 case 1:
                     print("Tipo de recurso: GENERAL")

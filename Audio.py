@@ -23,7 +23,7 @@ class Audio(Recurso):
         """
         Solicita al usuario los datos del recurso de audio.
         """
-        super().solicitar_datos
+        super().solicitar_datos()
         self.nom_cantante = input("Escriba el nombre del cantante: ")
         self.nom_productor = input("Escriba el nombre del productor: ")
         self.year_grabacion = int(input("Digíte el año en que se grabó el audio: "))

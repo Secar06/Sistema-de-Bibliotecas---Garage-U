@@ -25,7 +25,7 @@ class Revista(Recurso):
             """
             Solicita al usuario los datos de la revista, incluyendo ISSN y año de publicación.
             """
-            super().solicitar_datos
+            super().solicitar_datos()
             self.ISSN = int(input("Digíte el número ISSN de la revista: "))
             self.editorial = input("Escriba el nombre de la editorial de la revista: ")
             self.volumen = int(input("Digíte el volúmen de la revista: "))
