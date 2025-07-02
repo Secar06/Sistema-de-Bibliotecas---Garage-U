@@ -1,7 +1,3 @@
-from Libro import Libro
-from Audio import Audio
-from Revista import Revista
-from Video import Video
 """
 Autor: Sebastian Cardona, Henry Hincapié
 Fecha: 01/06/2025
@@ -32,36 +28,24 @@ class Recurso:
         self.titulo = input("Ingrese el título del recurso: ")
 
         print("\nIngrese la colección a la que pertenece el recurso:\n1. GENERAL\n2. RESERVA\n3. HEMEROTECA")
-        self.coleccion = int(input("Seleccione una opción del menú: "))
-        while self.coleccion not in [1, 2, 3]:
-            input("El tipo de colección ingresado es incorrecto, por favor intente nuevamente...")
-            print("\n1. GENERAL\n2. RESERVA\n3. HEMEROTECA")
-            self.coleccion = int(input("Seleccione una opción del menú: "))
+        while True:
+            try:
+                self.coleccion = int(input("Seleccione una opción del menú: "))
+                if self.coleccion in [1, 2, 3]:
+                    break  
+                else:
+                    print("El tipo de colección ingresado es incorrecto, por favor intente nuevamente...")
+            except ValueError:
+                print("El tipo de dato ingresado es erróneo, por favor ingrese un número (1, 2 o 3).")
 
         print("Ingrese el estado del recurso:\n1. PRESTADO\n2. DISPONIBLE\n3. REPARACION\n4. INACTIVO")
-        self.estado = int(input("Seleccione una opción del menú: "))
-        while self.estado not in [1, 2, 3, 4]:
-            input("El estado del recurso ingresado es incorrecto, por favor intente nuevamente...")
-            print("\n1. PRESTADO\n2. DISPONIBLE\n3. REPARACION\n4. INACTIVO")
-            self.estado = int(input("Seleccione una opción del menú: "))
+        while True:
+            try:
+                self.estado = int(input("Seleccione una opción del menú: "))
+                if self.coleccion in [1, 2, 3, 4]:
+                    break
+                else:
+                    print("El estado ingresado es incorrecto, por favor intente nuevamente...")
+            except ValueError:
+                print("El tipo de dato ingresado es erróneo, por favor ingrese un número (1, 2, 3 o 4).")
 
-        print("\n1. Libro\n2. Video\n3. Audio\n4. Revista")
-        self.tipo_recurso = int(input("Ingrese el tipo de recurso: "))
-        while self.tipo_recurso not in [1, 2, 3, 4]:
-            input("El tipo de recurso es incorrecto, intente nuevamente...")
-            print("\n1. Libro\n2. Video\n3. Audio\n4. Revista")
-            self.tipo_recurso = int(input("Ingrese el tipo de recurso: "))
-
-        # Cargar datos específicos según el tipo
-        if self.tipo_recurso == 1:
-            resource = Libro()
-            resource.almacenar_datos()
-        elif self.tipo_recurso == 2:
-            resource = Video()
-            resource.almacenar_datos()
-        elif self.tipo_recurso == 3:
-            resource = Audio()
-            resource.almacenar_datos()
-        elif self.tipo_recurso == 4:
-            resource = Revista()
-            resource.almacenar_datos()
