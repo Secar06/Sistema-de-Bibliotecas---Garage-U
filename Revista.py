@@ -19,7 +19,7 @@ class Revista(Recurso):
                self.editorial = editorial
                self.volumen = volumen
                self.numero = numero
-               self.año_publicacion = anno_publicacion
+               self.anno_publicacion = anno_publicacion
 
           def almacenar_datos(self):
                """
@@ -51,7 +51,10 @@ class Revista(Recurso):
 
                while True:
                     try:
-                         self.año_publicacion = int(input("Digíte el año en que se publicó la revista: "))
+                         self.anno_publicacion = int(input("Digíte el año en que se publicó la revista: "))
                          break
                     except ValueError:
                          print("Entrada inválida. Por favor, ingrese un número entero para el año de publicación.")
+
+          def mostrar_datos(self):
+               print(f"Titulo: {self.titulo} \nCódigo alfanumérico: {self.codigo_alfnum} \nISSN: {self.ISSN} \nEditorial {self.editorial} \nVolumen: {self.volumen} \nNumero: {self.numero} \nAño de publicación: {self.anno_publicacion}")

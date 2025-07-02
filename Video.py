@@ -45,6 +45,15 @@ class Video(Recurso):
             except ValueError:
                 print("El tipo de dato ingresado es erróneo, por favor ingrese un número (1, 2, 3 o 4).")
 
-
-
+    def mostrar_datos(self):
+        print(f"Titulo: {self.titulo} \nCódigo alfanumérico: {self.codigo_alfnum} \nNombre del productor: {self.nom_productor} \nNombre del director: {self.nom_director} \nAño de grabación: {self.year_grabacion}")
+        match self.genero:
+            case 1:
+                print("Genero: Documental")
+            case 2:
+                print("Genero: Comedia")
+            case 3:
+                print("Genero: Terror")
+            case 4:
+                print("Genero: Acción")
     

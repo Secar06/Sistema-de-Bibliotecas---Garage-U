@@ -32,3 +32,5 @@ class Audio(Recurso):
                 break
             except ValueError:
                 print("Entrada inválida. Por favor, ingrese un número entero para el año.")
+    def mostrar_datos(self):
+        print(f"Titulo: {self.titulo} \nCódigo alfanumérico: {self.codigo_alfnum} \nNombre del cantante: {self.nom_cantante} \nNombre del productor: {self.nom_productor} \nAño de grabación: {self.year_grabacion}")

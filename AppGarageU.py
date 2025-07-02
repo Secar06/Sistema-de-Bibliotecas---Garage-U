@@ -201,7 +201,7 @@ class AppGarageU():
                     self.contador_recursos += 1
                     print(f"\n¡El recurso con número de inventario {recurso.numero_inventario} ha sido registrado correctamente!")
                     print("=" * 50)
-                    print(f"Titulo: {recurso.titulo}")
+                    recurso.mostrar_datos()
                 case 2:
                     recurso = Revista()
                     recurso.almacenar_datos()
@@ -210,7 +210,7 @@ class AppGarageU():
                     self.contador_recursos += 1
                     print(f"\n¡El recurso con número de inventario {recurso.numero_inventario} ha sido registrado correctamente!")
                     print("=" * 50)
-                    print(f"Titulo: {recurso.titulo}")
+                    recurso.mostrar_datos()
                 case 3:
                     recurso = Video()
                     recurso.almacenar_datos()
@@ -219,7 +219,7 @@ class AppGarageU():
                     self.contador_recursos += 1
                     print(f"\n¡El recurso con número de inventario {recurso.numero_inventario} ha sido registrado correctamente!")
                     print("=" * 50)
-                    print(f"Titulo: {recurso.titulo}")
+                    recurso.mostrar_datos()
                 case 4:
                     recurso = Audio()
                     recurso.almacenar_datos()
@@ -228,8 +228,8 @@ class AppGarageU():
                     self.contador_recursos += 1
                     print(f"\n¡El recurso con número de inventario {recurso.numero_inventario} ha sido registrado correctamente!")
                     print("=" * 50)
-                    print(f"Titulo: {recurso.titulo}")
-                
+                    recurso.mostrar_datos()
+                    
             match recurso.coleccion :
                 case 1:
                     print("Tipo de recurso: GENERAL")
@@ -246,7 +246,6 @@ class AppGarageU():
                     print("Tipo de recurso: REPARACION")
                 case 4:
                     print("Tipo de recurso: INACTIVO")
-            print(f"Código alfanumérico: {recurso.codigo_alfnum}")
             match recurso.tipo_recurso:
                 case 1:
                     print("Tipo de recurso: Libro")
