@@ -3,7 +3,7 @@ from Recurso import Recurso
 from Usuario import Usuario
 from Funcionalidades import *
 
-class AppGarageU():
+class AppGarageU:
     """ En esta clase llamada AppGarageU se lleva a cabo las funcionalidades del programa, como registrar un nuevo usuario, verificar el usuario,
     añadir nuevos recursos, entre otros
     00
@@ -55,7 +55,7 @@ class AppGarageU():
         try:
             arreglo_de_datos = np.load(archivo, allow_pickle=True)
             i = 0
-            while arreglo_de_datos[i] != None:
+            while arreglo_de_datos[i] is not None:
                 i += 1
             return arreglo_de_datos, i
         except (FileNotFoundError, EOFError):
@@ -139,6 +139,11 @@ class AppGarageU():
             print("\n"*20)
         else:
             print("No hay usuarios registrados en el sistema.")
+
+    def eliminar_usuario(self, id_usuario):
+        """
+
+        """
 
     def verificar_usuario(self):
         """
