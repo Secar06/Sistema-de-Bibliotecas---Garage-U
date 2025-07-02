@@ -64,64 +64,106 @@ class Video(Recurso):
         print("\n--- Modificar datos del recurso de video ---")
 
         print(f"Código actual: {self.codigo_alfnum}")
-        if input("¿Desea modificar el código? (s/n): ").lower() == "s":
-            while True:
-                nuevo_codigo = input("Nuevo código alfanumérico: ").strip()
-                if nuevo_codigo:
-                    self.codigo_alfnum = nuevo_codigo
-                    break
-                else:
-                    print("El código no puede estar vacío.")
-
-        print(f"Título actual: {self.titulo}")
-        if input("¿Desea modificar el título? (s/n): ").lower() == "s":
-            while True:
-                nuevo_titulo = input("Nuevo título: ").strip()
-                if nuevo_titulo:
-                    self.titulo = nuevo_titulo
-                    break
-                else:
-                    print("El título no puede estar vacío.")
-
-        print(f"Productor actual: {self.nom_productor}")
-        if input("¿Desea modificar el nombre del productor? (s/n): ").lower() == "s":
-            while True:
-                nuevo_productor = input("Nuevo nombre del productor: ").strip()
-                if nuevo_productor:
-                    self.nom_productor = nuevo_productor
-                    break
-                else:
-                    print("El nombre del productor no puede estar vacío.")
-
-        print(f"Director actual: {self.nom_director}")
-        if input("¿Desea modificar el nombre del director? (s/n): ").lower() == "s":
-            while True:
-                nuevo_director = input("Nuevo nombre del director: ").strip()
-                if nuevo_director:
-                    self.nom_director = nuevo_director
-                    break
-                else:
-                    print("El nombre del director no puede estar vacío.")
-
-        print(f"Año de grabación actual: {self.year_grabacion}")
-        if input("¿Desea modificar el año de grabación? (s/n): ").lower() == "s":
-            while True:
-                try:
-                    self.year_grabacion = int(input("Nuevo año de grabación: "))
-                    break
-                except ValueError:
-                    print("Por favor, ingrese un número válido.")
-
-        print(f"Género actual: {self.genero}")
-        if input("¿Desea modificar el género? (s/n): ").lower() == "s":
-            print("Opciones: \n1. DOCUMENTAL \n2. COMEDIA \n3. TERROR \n4. ACCIÓN")
-            while True:
-                try:
-                    nuevo_genero = int(input("Seleccione una opción del menú: "))
-                    if nuevo_genero in [1, 2, 3, 4]:
-                        self.genero = nuevo_genero
+        while True:
+            opcion = input("¿Desea modificar el código? (s/n): ").lower()
+            if opcion == "s":
+                while True:
+                    nuevo_codigo = input("Nuevo código alfanumérico: ").strip()
+                    if nuevo_codigo:
+                        self.codigo_alfnum = nuevo_codigo
                         break
                     else:
-                        print("El género ingresado es incorrecto, intente nuevamente.")
-                except ValueError:
-                    print("Entrada inválida. Ingrese un número (1, 2, 3 o 4).")
+                        print("El código no puede estar vacío.")
+                break
+            elif opcion == "n":
+                break
+            else:
+                print("Respuesta inválida. Responda con 's' o 'n'.")
+
+        print(f"Título actual: {self.titulo}")
+        while True:
+            opcion = input("¿Desea modificar el título? (s/n): ").lower()
+            if opcion == "s":
+                while True:
+                    nuevo_titulo = input("Nuevo título: ").strip()
+                    if nuevo_titulo:
+                        self.titulo = nuevo_titulo
+                        break
+                    else:
+                        print("El título no puede estar vacío.")
+                break
+            elif opcion == "n":
+                break
+            else:
+                print("Respuesta inválida. Responda con 's' o 'n'.")
+
+        print(f"Productor actual: {self.nom_productor}")
+        while True:
+            opcion = input("¿Desea modificar el nombre del productor? (s/n): ").lower()
+            if opcion == "s":
+                while True:
+                    nuevo_productor = input("Nuevo nombre del productor: ").strip()
+                    if nuevo_productor:
+                        self.nom_productor = nuevo_productor
+                        break
+                    else:
+                        print("El nombre del productor no puede estar vacío.")
+                break
+            elif opcion == "n":
+                break
+            else:
+                print("Respuesta inválida. Responda con 's' o 'n'.")
+
+        print(f"Director actual: {self.nom_director}")
+        while True:
+            opcion = input("¿Desea modificar el nombre del director? (s/n): ").lower()
+            if opcion == "s":
+                while True:
+                    nuevo_director = input("Nuevo nombre del director: ").strip()
+                    if nuevo_director:
+                        self.nom_director = nuevo_director
+                        break
+                    else:
+                        print("El nombre del director no puede estar vacío.")
+                break
+            elif opcion == "n":
+                break
+            else:
+                print("Respuesta inválida. Responda con 's' o 'n'.")
+
+        print(f"Año de grabación actual: {self.year_grabacion}")
+        while True:
+            opcion = input("¿Desea modificar el año de grabación? (s/n): ").lower()
+            if opcion == "s":
+                while True:
+                    try:
+                        self.year_grabacion = int(input("Nuevo año de grabación: "))
+                        break
+                    except ValueError:
+                        print("Por favor, ingrese un número válido.")
+                break
+            elif opcion == "n":
+                break
+            else:
+                print("Respuesta inválida. Responda con 's' o 'n'.")
+
+        print(f"Género actual: {self.genero}")
+        while True:
+            opcion = input("¿Desea modificar el género? (s/n): ").lower()
+            if opcion == "s":
+                print("Opciones: \n1. DOCUMENTAL \n2. COMEDIA \n3. TERROR \n4. ACCIÓN")
+                while True:
+                    try:
+                        nuevo_genero = int(input("Seleccione una opción del menú: "))
+                        if nuevo_genero in [1, 2, 3, 4]:
+                            self.genero = nuevo_genero
+                            break
+                        else:
+                            print("El género ingresado es incorrecto, intente nuevamente.")
+                    except ValueError:
+                        print("Entrada inválida. Ingrese un número (1, 2, 3 o 4).")
+                break
+            elif opcion == "n":
+                break
+            else:
+                print("Respuesta inválida. Responda con 's' o 'n'.")

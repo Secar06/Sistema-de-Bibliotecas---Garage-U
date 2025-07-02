@@ -65,51 +65,101 @@ class Revista(Recurso):
                """
                print("\n--- Modificar datos del recurso ---")
 
-               print(f"Código alfanumerico actual: {self.codigo_alfnum}")
-               if input("¿Desea modificar el código? (s/n): ").lower() == "s":
-                    self.codigo_alfnum = input("Nuevo código alfanumérico: ")
+               print(f"Código alfanumérico actual: {self.codigo_alfnum}")
+               while True:
+                    opcion = input("¿Desea modificar el código? (s/n): ").lower()
+                    if opcion == "s":
+                         self.codigo_alfnum = input("Nuevo código alfanumérico: ")
+                         break
+                    elif opcion == "n":
+                         break
+                    else:
+                         print("La respuesta es inválida. Responda con 's' o 'n'.")
 
                print(f"Título actual: {self.titulo}")
-               if input("¿Desea modificar el título? (s/n): ").lower() == "s":
-                    self.titulo = input("Nuevo título: ")
+               while True:
+                    opcion = input("¿Desea modificar el título? (s/n): ").lower()
+                    if opcion == "s":
+                         self.titulo = input("Nuevo título: ")
+                         break
+                    elif opcion == "n":
+                         break
+                    else:
+                         print("La respuesta es inválida. Responda con 's' o 'n'.")
 
                print(f"Editorial actual: {self.editorial}")
-               if input("¿Desea modificar la editorial? (s/n): ").lower() == "s":
-                    self.editorial = input("Nueva editorial: ")
+               while True:
+                    opcion = input("¿Desea modificar la editorial? (s/n): ").lower()
+                    if opcion == "s":
+                         self.editorial = input("Nueva editorial: ")
+                         break
+                    elif opcion == "n":
+                         break
+                    else:
+                         print("La respuesta es inválida. Responda con 's' o 'n'.")
 
                print(f"ISSN actual: {self.ISSN}")
-               if input("¿Desea modificar el ISSN? (s/n): ").lower() == "s":
-                    while True:
-                         try:
-                              self.ISSN = int(input("Nuevo ISSN: "))
-                              break
-                         except ValueError:
-                              print("Por favor, ingrese un número válido.")
+               while True:
+                    opcion = input("¿Desea modificar el ISSN? (s/n): ").lower()
+                    if opcion == "s":
+                         while True:
+                              try:
+                                   self.ISSN = int(input("Nuevo ISSN: "))
+                                   break
+                              except ValueError:
+                                   print("Por favor, ingrese un número válido.")
+                         break
+                    elif opcion == "n":
+                         break
+                    else:
+                         print("La respuesta es inválida. Responda con 's' o 'n'.")
 
                print(f"Volumen actual: {self.volumen}")
-               if input("¿Desea modificar el volumen? (s/n): ").lower() == "s":
-                    while True:
-                         try:
-                              self.volumen = int(input("Nuevo volumen: "))
-                              break
-                         except ValueError:
-                              print("Por favor, ingrese un número válido.")
+               while True:
+                    opcion = input("¿Desea modificar el volumen? (s/n): ").lower()
+                    if opcion == "s":
+                         while True:
+                              try:
+                                   self.volumen = int(input("Nuevo volumen: "))
+                                   break
+                              except ValueError:
+                                   print("Por favor, ingrese un número válido.")
+                         break
+                    elif opcion == "n":
+                         break
+                    else:
+                         print("La respuesta es inválida. Responda con 's' o 'n'.")
 
                print(f"Número actual: {self.numero}")
-               if input("¿Desea modificar el número de revista? (s/n): ").lower() == "s":
-                    while True:
-                         try:
-                              self.numero = int(input("Nuevo número de revista: "))
-                              break
-                         except ValueError:
-                              print("Por favor, ingrese un número válido.")
+               while True:
+                    opcion = input("¿Desea modificar el número de revista? (s/n): ").lower()
+                    if opcion == "s":
+                         while True:
+                              try:
+                                   self.numero = int(input("Nuevo número de revista: "))
+                                   break
+                              except ValueError:
+                                   print("Por favor, ingrese un número válido.")
+                         break
+                    elif opcion == "n":
+                         break
+                    else:
+                         print("La respuesta es inválida. Responda con 's' o 'n'.")
 
                print(f"Año de publicación actual: {self.anno_publicacion}")
-               if input("¿Desea modificar el año de publicación? (s/n): ").lower() == "s":
-                    while True:
-                         try:
-                              self.anno_publicacion = int(input("Nuevo año de publicación: "))
-                              break
-                         except ValueError:
-                              print("Por favor, ingrese un número válido.")
+               while True:
+                    opcion = input("¿Desea modificar el año de publicación? (s/n): ").lower()
+                    if opcion == "s":
+                         while True:
+                              try:
+                                   self.anno_publicacion = int(input("Nuevo año de publicación: "))
+                                   break
+                              except ValueError:
+                                   print("Por favor, ingrese un número válido.")
+                         break
+                    elif opcion == "n":
+                         break
+                    else:
+                         print("La respuesta es inválida. Responda con 's' o 'n'.")
+
 
