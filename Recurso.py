@@ -21,6 +21,9 @@ class Recurso:
         self.tipo_recurso = tipo_recurso
         self.codigo_alfnum = codigo_alfnum
 
+    def get_id(self):
+        return self.numero_inventario
+
     def solicitar_datos(self):
         """
         Solicita y valida los datos generales del recurso.
