@@ -5,6 +5,7 @@ from Libro import Libro
 from Revista import Revista
 from Video import Video
 from Usuario import Usuario
+from Prestamo import Prestamo
 from Funcionalidades import *
 
 class AppGarageU():
@@ -17,8 +18,10 @@ class AppGarageU():
     #ATRIBUTOS
     arreglo_recursos = np.ndarray
     arreglo_usuarios = np.ndarray
+    arreglo_prestamos = np.ndarray
     contador_usuarios = int
     contador_recursos = int
+    contador_prestamos = int
     usuario_autenticado = Usuario
 
     # CONSTANTES
@@ -29,20 +32,23 @@ class AppGarageU():
     PERFIL_USUARIO = 3
     MAX_RECURSOS = 100
     MAX_USUARIOS = 100
+    MAX_PRESTAMOS = 100
 
     def __init__(self):
         # Carga los usuarios almacenados en el archivo de usuarios
         self.arreglo_usuarios, self.contador_usuarios = self.cargar_datos(Usuario.ARCHIVO, self.MAX_USUARIOS)
 
-        self.arreglo_recursos = np.full(self.MAX_RECURSOS, fill_value = None, dtype= object)
+        self.arreglo_recursos, self.contador_recursos = self.cargar_datos(Recurso.ARCHIVO, self.MAX_RECURSOS)
+
+        self.arreglo_prestamos, self.contador_prestamos = self.cargar_datos(Prestamo.ARCHIVO, self.MAX_PRESTAMOS)
 
         if self.contador_usuarios == 0:
             self.arreglo_usuarios[0] = Usuario(nombre = "Administrador", identificacion=000, contrasenna='000')
             self.arreglo_usuarios[0].cambiar_perfil(self.PERFIL_ADMIN)
             self.contador_usuarios = 1
 
-        self.contador_recursos = 0
 
+            
         self.usuario_autenticado = None
 
     def cargar_datos(self, archivo, num_max_datos):
@@ -277,6 +283,34 @@ class AppGarageU():
             place_holder_recurso.modificar_datos()  
         else:
             print("No hay recursos registrados")
+
+    def registrar_prestamo(self):
+        if self.contador_prestamos >= self.MAX_PRESTAMOS:
+            print("No se puede realizar el registro del recurso.\n Causa: almacenamiento insuficiente en el sistema.")
+            return
+        elif self.usuario_autenticado.perfil_usuario in [1, 2]:
+                #1 es para admin y 2 para bibliotecario
+                input("Seleccionó la opción 1. Presione Enter para continuar")
+                while True:
+                    try:
+                        buscar_id = int(input("Ingrese la id del usuario al cual se le va generar el prestamo: "))
+                        break
+                    except ValueError:
+                        print("Entrada inválida. Por favor, ingrese un número entero.")
+                while True:
+                    try:
+                        buscar_cod = int(input("Ingrese el codigo de inventario del recurso que va a ser prestado: "))
+                        break
+                    except ValueError:
+                        print("Entrada inválida. Por favor, ingrese un número entero.")
+                for i in range(self.contador_usuarios):
+                    usuario = self.arreglo_usuarios[i]
+                    if usuario.identificacion == buscar_id:
+                        for j in range(self.contador_recursos):
+                            recurso = self.arreglo_recursos[i]
+                            if recurso.numero_inventario == buscar_cod:
+                                
+
     def mostrar_menu_usuario(self):
         """
         En este método se mostrará el menú del usuario regular, el cual por el momento solo
