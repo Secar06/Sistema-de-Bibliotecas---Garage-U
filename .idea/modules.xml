@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../Proyecto/.idea/Proyecto.iml" filepath="$PROJECT_DIR$/../Proyecto/.idea/Proyecto.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/Sistema-de-Bibliotecas---Garage-U.iml" filepath="$PROJECT_DIR$/.idea/Sistema-de-Bibliotecas---Garage-U.iml" />
     </modules>
   </component>
