@@ -34,7 +34,7 @@ class AppGarageU():
         # Carga los usuarios almacenados en el archivo de usuarios
         self.arreglo_usuarios, self.contador_usuarios = self.cargar_datos(Usuario.ARCHIVO, self.MAX_USUARIOS)
 
-        self.arreglo_recursos = np.full(self.MAX_USUARIOS, fill_value = None, dtype= object)
+        self.arreglo_recursos = np.full(self.MAX_RECURSOS, fill_value = None, dtype= object)
 
         if self.contador_usuarios == 0:
             self.arreglo_usuarios[0] = Usuario(nombre = "Administrador", identificacion=000, contrasenna='000')
@@ -201,7 +201,7 @@ class AppGarageU():
                     self.contador_recursos += 1
                     print(f"\n¡El recurso con número de inventario {recurso.numero_inventario} ha sido registrado correctamente!")
                     print("=" * 50)
-                    print(f"Titulo: {recurso.titulo}")
+                    recurso.mostrar_datos()
                 case 2:
                     recurso = Revista()
                     recurso.almacenar_datos()
@@ -210,7 +210,7 @@ class AppGarageU():
                     self.contador_recursos += 1
                     print(f"\n¡El recurso con número de inventario {recurso.numero_inventario} ha sido registrado correctamente!")
                     print("=" * 50)
-                    print(f"Titulo: {recurso.titulo}")
+                    recurso.mostrar_datos()
                 case 3:
                     recurso = Video()
                     recurso.almacenar_datos()
@@ -219,7 +219,7 @@ class AppGarageU():
                     self.contador_recursos += 1
                     print(f"\n¡El recurso con número de inventario {recurso.numero_inventario} ha sido registrado correctamente!")
                     print("=" * 50)
-                    print(f"Titulo: {recurso.titulo}")
+                    recurso.mostrar_datos()
                 case 4:
                     recurso = Audio()
                     recurso.almacenar_datos()
@@ -228,8 +228,8 @@ class AppGarageU():
                     self.contador_recursos += 1
                     print(f"\n¡El recurso con número de inventario {recurso.numero_inventario} ha sido registrado correctamente!")
                     print("=" * 50)
-                    print(f"Titulo: {recurso.titulo}")
-                
+                    recurso.mostrar_datos()
+
             match recurso.coleccion :
                 case 1:
                     print("Tipo de recurso: GENERAL")
@@ -246,7 +246,6 @@ class AppGarageU():
                     print("Tipo de recurso: REPARACION")
                 case 4:
                     print("Tipo de recurso: INACTIVO")
-            print(f"Código alfanumérico: {recurso.codigo_alfnum}")
             match recurso.tipo_recurso:
                 case 1:
                     print("Tipo de recurso: Libro")
@@ -260,9 +259,24 @@ class AppGarageU():
                 case 4:
                     print("Tipo de recurso: Revista")
                     print("=" * 50)
+            # Guarda en el archivo los datos de los usuarios
+            if not self.guardar_datos(self.arreglo_recursos, recurso.ARCHIVO):
+                print("No se pudo guardar el archivo de recursos")
+            else:
+                print("\nSe actualizó el archivo de recursos")
         else:
             print("No se puede realizar el registro del recurso.\n Causa: almacenamiento insuficiente en el sistema.")
 
+        
+
+    def modificar_recurso(self):
+        if self.contador_recursos > 0:
+            print(f"Hay un total de {self.contador_recursos} recursos")
+            numero_recurso_arreglo = int(input("Ingrese el numero de inventario del recurso que desea modificar")) 
+            place_holder_recurso = self.arreglo_recursos[numero_recurso_arreglo - 1]
+            place_holder_recurso.modificar_datos()  
+        else:
+            print("No hay recursos registrados")
     def mostrar_menu_usuario(self):
         """
         En este método se mostrará el menú del usuario regular, el cual por el momento solo
@@ -303,11 +317,11 @@ class AppGarageU():
         problemas la opción elegida por el usuario administrador.
         """
         option = -1
-        while option != 5:
+        while option != 6:
             print("\n" + "=" * 25)
             print(" MENÚ DE ADMINISTRADOR ")
             print("=" * 25)
-            print("1. Registrar un nuevo usuario \n2. Modificar un usuario \n3. Registrar un nuevo recurso \n4. Inhabilitar Un recurso\n5. Cerrar sesión")
+            print("1. Registrar un nuevo usuario \n2. Modificar un usuario \n3. Registrar un nuevo recurso \n4. Inhabilitar Un recurso\n5. Modificar un recurso \n6. Cerrar sesión")
             option = int(input("Seleccione una opción del menú: "))
 
             match option:
@@ -338,6 +352,12 @@ class AppGarageU():
                     input("\n[ADMIN] Ha seleccionado la opción 4. Presione Enter para continuar...")
                     self.inhabilitar_recurso()
                 case 5:
+                    print("\n" + "=" * 50)
+                    print(" MENÚ DE ADMINISTRADOR - MODIFICACIÓN DE RECURSO ")
+                    print("=" * 50)
+                    input("\n[ADMIN] Ha seleccionado la opción 5. Presione Enter para continuar...")
+                    self.modificar_recurso()
+                case 6:
                     input("\n[ADMIN] Se ha cerrado la sesión correctamente. Presione Enter para continuar...")
                 case _:
                     input("\n[ADMIN] Opción incorrecta. Inténtelo nuevamente. Presione Enter para continuar...")
