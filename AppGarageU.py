@@ -273,7 +273,6 @@ class AppGarageU():
         else:
             print("No se puede realizar el registro del recurso.\n Causa: almacenamiento insuficiente en el sistema.")
 
-        
 
     def modificar_recurso(self):
         if self.contador_recursos > 0:
