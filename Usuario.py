@@ -46,6 +46,24 @@ class Usuario():
         self.tipo_usuario = tipo_usuario
         self.perfil_usuario = perfil_usuario
 
+    def get_perfil_usuario(self):
+        match self.perfil_usuario:
+            case 1:
+                return "Administrador"
+            case 2:
+                return "Bibliotecario"
+            case 3:
+                return "Usuario"
+        return None
+
+    def get_tipo_usuario(self):
+        match self.tipo_usuario:
+            case 1:
+                return "Estudiante"
+            case 2:
+                return "Empleado"
+        return None
+
     def almacenar_datos(self):
         """
         Permite al usuario ingresar sus datos básicos desde la app.
@@ -189,26 +207,19 @@ class Usuario():
                     input("Opción incorrecta. Inténtelo nuevamente. Presione enter para continuar...")
 
     def mostrar_datos(self):
-        print(f"Identificación: {self.identificacion}")
-        print(f"Contraseña: {self.identificacion}")
-        print(f"Nombre completo: {self.nombre}")
-        print(f"Dirección: {self.direccion.lower()}")
-        print(f"Teléfono: {self.telefono}")
-        print(f"Email registrado: {self.email.lower()}")
-        print("=" * 50)
-        match self.tipo_usuario:
-            case 1:
-                print(f"Tipo de usuario: Estudiante")
-            case 2:
-                print(f"Tipo de usuario: Empleado")
-
-        match self.perfil_usuario:
-            case 1:
-                print(f"Perfil de usuario: Administrador")
-            case 2:
-                print(f"Perfil de usuario: Bibliotecario")
-            case 3:
-                print(f"Perfil de usuario: Usuario")
+        return(
+            "========================================\n"
+            f"Identificación: {self.identificacion}\n"
+            f"Contraseña: {self.identificacion}\n"
+            f"Nombre completo: {self.nombre}\n"
+            f"Dirección: {self.direccion.lower()}\n"
+            f"Teléfono: {self.telefono}\n"
+            f"Email registrado: {self.email.lower()}\n"
+            f"Multa: {self.multa}\n"
+            "========================================\n"
+            f"{self.get_tipo_usuario()}\n"
+            f"{self.get_perfil_usuario()}\n"
+            "============================")
 
     def consultar_indice(self, arreglo):
         for i in range(len(arreglo)):

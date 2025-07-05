@@ -91,30 +91,34 @@ class AppGarageU:
         """
         if self.contador_usuarios <= self.MAX_USUARIOS:
             user = Usuario()
+            while True:
+                input_identificacion = input("\nIngrese el número de identificación del nuevo usuario o presione Enter para cancelar: ")
+                if input_identificacion == "":
+                    return
+                try:
+                    input_identificacion = int(input_identificacion)
+                except ValueError:
+                    print("\nNúmero de identificación no válido. Por favor inténtelo nuevamente.")
+                else:
+                    while self.validar_usuario(input_identificacion):
+                        print(
+                            f"\n[ADMIN] Se encontró un usuario con la identificación {input_identificacion}."
+                            f" Por favor ingrese una identificación diferente.")
+                        break
+                    else:
+                        # user.almacenar_datos()
+                        # self.arreglo_usuarios[self.contador_usuarios] = user
+                        # self.contador_usuarios += 1
+                        #
+                        # # Guarda en el archivo los datos de los usuarios
+                        # if not self.guardar_datos(self.arreglo_usuarios, Usuario.ARCHIVO):
+                        #     print("No se pudo guardar el archivo de usaurios")
+                        # else:
+                        #     print("\n[ADMIN] ¡Usuario Registrado Exitosamente!")
 
-            user.identificacion = int(input("Ingrese el número de identificación del nuevo usuario: "))
-
-            while self.validar_usuario(user.identificacion):
-                print(f"\n[ADMIN] Se encontró un usuario con la identificación {user.identificacion}\n")
-                user.identificacion = int(input("Ingrese un número de identificación válido: "))
-
-            user.almacenar_datos()
-            self.arreglo_usuarios[self.contador_usuarios] = user
-            self.contador_usuarios += 1
-
-            # Guarda en el archivo los datos de los usuarios
-            if not self.guardar_datos(self.arreglo_usuarios, Usuario.ARCHIVO):
-                print("No se pudo guardar el archivo de usaurios")
-            else:
-                print("\nSe actualizó el archivo de usuarios")
-
-            print(self.arreglo_usuarios)
-
-            print("\n[ADMIN] ¡Usuario Registrado Exitosamente!")
-            print("=" * 50)
-            user.mostrar_datos()
-            print("=" * 40)
-            input("Presione Enter para continuar...")
+                        print(user.mostrar_datos())
+                        input("\nPresione Enter para volver al menú principal...")
+                        return
         else:
             print("No se puede realizar el registro del usuario.\nCausa: almacenamiento insuficiente en el sistema.")
 
@@ -168,10 +172,30 @@ class AppGarageU:
                     self.usuario_autenticado = self.arreglo_usuarios[i]
                     return True
                 else:
-                    print("Identificación o contraseña incorrecta. Acceso denegado.")
+                    print("\nIdentificación o contraseña incorrecta. Acceso denegado.")
                     return False
         input(f"El usuario con identificación {identificacion} no está registrado. Presione enter para continuar ...")
         return False
+
+    def crear_recurso(self, tipo_recurso):
+        """Crea una instancia de un recurso y lo almacena en el arreglo de recursos.
+
+            PARAMS:
+                tipo_recurso: instancia de un recurso.
+                arreglo: arreglo de recursos donde se almancenará el nuevo recurso.
+                i: contador de recursos en el arreglo.
+            RETURNS
+                recurso: nueva instancia creada.
+        """
+        recurso = tipo_recurso
+        recurso.almacenar_datos()
+        recurso.numero_inventario = self.contador_recursos + 1
+        self.arreglo_recursos[self.contador_recursos] = recurso
+        self.contador_recursos += 1
+        print(f"\n¡El recurso con número de inventario {recurso.numero_inventario} ha sido registrado correctamente!")
+        print("=" * 50)
+        print(f"Titulo: {recurso.titulo}")
+        return recurso
 
     def registrar_recurso(self):
         """
@@ -181,84 +205,46 @@ class AppGarageU:
         el recurso nuevo y se mostrará un mensaje avisando que se registró correctamente el recurso,
         junto con su número de inventario.
         """
-        print("\n" + "=" * 50)
-        print("   MENÚ DE BIBLIOTECARIO  ")
-        print("=" * 50)
-        if self.contador_recursos < self.MAX_RECURSOS:
-            tipo_recurso = func.solicitar_opcion_menu(func.registrar_recurso_menu(),[1,2,3,4])
-            if tipo_recurso is None:
+        recurso = object
+
+        if self.contador_recursos >= self.MAX_RECURSOS:
+            print("No se puede realizar el registro del recurso.\n Causa: almacenamiento insuficiente en el sistema.")
+        else:
+            if self.usuario_autenticado.perfil_usuario == self.PERFIL_BIBLIO:
+                print(
+                "\n==============================\n"
+                "     MENÚ DE BIBLIOTECARIO    \n"
+                "==============================")
+            else:
+                "\n==============================\n"
+                "     MENÚ DE ADMINISTRADOR    \n"
+                "=============================="
+
+            opcion_recurso = func.solicitar_opcion_menu(func.registrar_recurso_menu(),[1,2,3,4])
+            if opcion_recurso is None:
                 return
             else:
-                match tipo_recurso:
+                match opcion_recurso:
                     case 1:
-                        recurso = Libro()
-                        recurso.almacenar_datos()
-                        recurso.numero_inventario = self.contador_recursos + 1
-                        self.arreglo_recursos[self.contador_recursos] = recurso
-                        self.contador_recursos += 1
-                        print(f"\n¡El recurso con número de inventario {recurso.numero_inventario} ha sido registrado correctamente!")
-                        print("=" * 50)
-                        print(f"Titulo: {recurso.titulo}")
+                        recurso = self.crear_recurso(Libro())
                     case 2:
-                        recurso = Revista()
-                        recurso.almacenar_datos()
-                        recurso.numero_inventario = self.contador_recursos + 1
-                        self.arreglo_recursos[self.contador_recursos] = recurso
-                        self.contador_recursos += 1
-                        print(f"\n¡El recurso con número de inventario {recurso.numero_inventario} ha sido registrado correctamente!")
-                        print("=" * 50)
-                        print(f"Titulo: {recurso.titulo}")
+                        recurso = self.crear_recurso(Revista())
                     case 3:
-                        recurso = Video()
-                        recurso.almacenar_datos()
-                        recurso.numero_inventario = self.contador_recursos + 1
-                        self.arreglo_recursos[self.contador_recursos] = recurso
-                        self.contador_recursos += 1
-                        print(f"\n¡El recurso con número de inventario {recurso.numero_inventario} ha sido registrado correctamente!")
-                        print("=" * 50)
-                        print(f"Titulo: {recurso.titulo}")
+                        recurso = self.crear_recurso(Video())
                     case 4:
-                        recurso = Audio()
-                        recurso.almacenar_datos()
-                        recurso.numero_inventario = self.contador_recursos + 1
-                        self.arreglo_recursos[self.contador_recursos] = recurso
-                        self.contador_recursos += 1
-                        print(f"\n¡El recurso con número de inventario {recurso.numero_inventario} ha sido registrado correctamente!")
-                        print("=" * 50)
-                        print(f"Titulo: {recurso.titulo}")
+                        recurso  = self.crear_recurso(Audio())
 
-                match recurso.coleccion :
-                    case 1:
-                        print("Tipo de recurso: GENERAL")
-                    case 2:
-                        print("Tipo de recurso: RESERVA")
-                    case 3:
-                        print("Tipo de recurso: HEMEROTECA")
-                match recurso.estado:
-                    case 1:
-                        print("Tipo de recurso: PRESTADO")
-                    case 2:
-                        print("Tipo de recurso: DISPONIBLE")
-                    case 3:
-                        print("Tipo de recurso: REPARACION")
-                    case 4:
-                        print("Tipo de recurso: INACTIVO")
+                coleccion = recurso.get_coleccion()
+                print(f"Tipo de recurso: {coleccion}")
+
+                estado = recurso.get_estado()
+                print(f"Tipo de recurso: {estado}")
+
                 print(f"Código alfanumérico: {recurso.codigo_alfnum}")
-                match recurso.tipo_recurso:
-                    case 1:
-                        print("Tipo de recurso: Libro")
-                        print("=" * 50)
-                    case 2:
-                        print("Tipo de recurso: Video")
-                        print("=" * 50)
-                    case 3:
-                        print("Tipo de recurso: Audio")
-                        print("=" * 50)
-                    case 4:
-                        print("Tipo de recurso: Revista")
-                        print("=" * 50)
-        else:
-            print("No se puede realizar el registro del recurso.\n Causa: almacenamiento insuficiente en el sistema.")
+
+                tipo_recurso = recurso.get_tipo_recurso()
+                print(f"Tipo de recurso: {tipo_recurso}")
+                print("=" * 50)
 
     def iniciar_menu_usuario(self):
         """
@@ -290,7 +276,7 @@ class AppGarageU:
                         case _:
                             input("\nOpción incorrecta. Inténtelo nuevamente. Presione Enter para continuar...")
 
-    def mostrar_menu_admin(self):
+    def iniciar_menu_admin(self):
         """
         En este método se mostrará el menú del usuario administrador, el cual por medio de un ciclo while
         permite al usuario escoger entre 3 opciones qué desea hacer, si registrar un usuario nuevo o
@@ -299,41 +285,43 @@ class AppGarageU:
         """
         opcion_admin = -1
         while opcion_admin != 5:
-            opcion_admin = func.solicitar_opcion_menu(func.mostrar_menu_admin(),[1,2,3,4,5])
-            if opcion_admin is None:
-                return
-            else:
-                match opcion_admin:
-                    case 1:
-                        input("\n[ADMIN] Ha seleccionado la opción 1. Presione Enter para continuar...")
-                        print("\n" + "=" * 50)
-                        print("   MENÚ DE ADMINISTRADOR - REGISTRO DE USUARIO ")
-                        print("=" * 50)
-                        self.registrar_usuario()
-                    case 2:
-                        print("\n" + "=" * 50)
-                        print(" MENÚ DE ADMINISTRADOR - MODIFICACIÓN DE REGISTROS ")
-                        print("=" * 50)
-                        input("\n[ADMIN] Ha seleccionado la opción 2. Presione Enter para continuar...")
-                        user_id = int(input("\nDigite el número de documento del usuario: "))
-                        self.modificar_usuario(user_id)
-                        print("\n"*20)
-                    case 3:
-                        print("\n" + "=" * 50)
-                        print(" MENÚ DE ADMINISTRADOR - REGISTRO DE RECURSO ")
-                        print("=" * 50)
-                        input("\n[ADMIN] Ha seleccionado la opción 3. Presione Enter para continuar...")
-                        self.registrar_recurso()
-                    case 4:
-                        print("\n" + "=" * 50)
-                        print(" MENÚ DE ADMINISTRADOR - INHABILITACIÓN DE RECURSO ")
-                        print("=" * 50)
-                        input("\n[ADMIN] Ha seleccionado la opción 4. Presione Enter para continuar...")
-                        self.inhabilitar_recurso()
-                    case 5:
-                        input("\n[ADMIN] Se ha cerrado la sesión correctamente. Presione Enter para continuar...")
-                    case _:
-                        input("\n[ADMIN] Opción incorrecta. Inténtelo nuevamente. Presione Enter para continuar...")
+            while True:
+                opcion_admin = func.solicitar_opcion_menu(func.mostrar_menu_admin(),[1,2,3,4,5], False)
+                if opcion_admin not in [1,2,3,4,5]:
+                    print("Opción no válida. Por favor inténtelo nuevamente...")
+                else:
+                    match opcion_admin:
+                        case 1:
+                            input("\n[ADMIN] Ha seleccionado la opción 1. Presione Enter para continuar...")
+                            print("\n" + "=" * 50)
+                            print("   MENÚ DE ADMINISTRADOR - REGISTRO DE USUARIO ")
+                            print("=" * 50)
+                            self.registrar_usuario()
+                        case 2:
+                            print("\n" + "=" * 50)
+                            print(" MENÚ DE ADMINISTRADOR - MODIFICACIÓN DE REGISTROS ")
+                            print("=" * 50)
+                            input("\n[ADMIN] Ha seleccionado la opción 2. Presione Enter para continuar...")
+                            user_id = int(input("\nDigite el número de documento del usuario: "))
+                            self.modificar_usuario(user_id)
+                            print("\n"*20)
+                        case 3:
+                            print("\n" + "=" * 50)
+                            print(" MENÚ DE ADMINISTRADOR - REGISTRO DE RECURSO ")
+                            print("=" * 50)
+                            input("\n[ADMIN] Ha seleccionado la opción 3. Presione Enter para continuar...")
+                            self.registrar_recurso()
+                        case 4:
+                            print("\n" + "=" * 50)
+                            print(" MENÚ DE ADMINISTRADOR - INHABILITACIÓN DE RECURSO ")
+                            print("=" * 50)
+                            input("\n[ADMIN] Ha seleccionado la opción 4. Presione Enter para continuar...")
+                            self.inhabilitar_recurso()
+                        case 5:
+                            input("\n[ADMIN] Se ha cerrado la sesión correctamente. Presione Enter para continuar...")
+                            return
+                        case _:
+                            input("\n[ADMIN] Opción incorrecta. Inténtelo nuevamente. Presione Enter para continuar...")
 
 
     def iniciar_menu_biblio(self):
@@ -345,19 +333,17 @@ class AppGarageU:
         """
         opcion_biblio = -1
         while opcion_biblio != 3:
-            opcion_biblio = func.solicitar_opcion_menu(func.mostrar_menu_biblio(),[1,2,3])
-            if opcion_biblio is None:
-                return
-            else:
-                match opcion_biblio:
-                    case 1:
-                        self.registrar_recurso()
-                    case 2:
-                        self.inhabilitar_recurso()
-                    case 3:
-                        input("\nSe ha cerrado la sesión correctamente. Presione Enter para continuar...")
-                    case _:
-                        input("\n[ADMIN] Opción incorrecta. Inténtelo nuevamente. Presione Enter para continuar...")
+            opcion_biblio = func.solicitar_opcion_menu(func.mostrar_menu_biblio(),[1,2,3], False)
+            match opcion_biblio:
+                case 1:
+                    self.registrar_recurso()
+                case 2:
+                    self.inhabilitar_recurso()
+                case 3:
+                    input("\nSe ha cerrado la sesión correctamente. Presione Enter para continuar...")
+                    return
+                case _:
+                    input("\n[ADMIN] Opción incorrecta. Inténtelo nuevamente. Presione Enter para continuar...")
 
     def inhabilitar_recurso(self):
         """
@@ -367,11 +353,21 @@ class AppGarageU:
         se encuentra inhabilitado y en caso de no estarlo se emitirá un mensaje mostrando el número
         de inventario del recurso avisando que ya se ha inhabilitado correctamente.
         """
-        print("\n" + "=" * 50)
-        print("      ADMINISTRACIÓN - INHABILITAR RECURSO")
-        print("=" * 50)
-
-        numero = int(input("Ingrese el número de inventario del recurso que desea inhabilitar: "))
+        numero = int
+        while True:
+            print("\n" + "=" * 50)
+            print("      ADMINISTRACIÓN - INHABILITAR RECURSO")
+            print("=" * 50)
+            numero = (input(
+                    "Ingrese el número de inventario del recurso que desea inhabilitar o presione Enter para cancelar: "
+                    ))
+            if numero == "":
+                return
+            try:
+                numero = int(numero)
+                break
+            except ValueError:
+                print("Número de inventario no válido. Por favor inténtelo nuevamente")
 
         for i in range(self.contador_recursos):
             recurso = self.arreglo_recursos[i]
@@ -388,18 +384,13 @@ class AppGarageU:
     def main(self):
         opc = 0
         while opc != 2:
-            print("\n" + "=" * 40)
-            print("\t    MENÚ PRINCIPAL\t  ")
-            print("=" * 40)
-            print("1. Auntenticarse \n2. Salir de la app")
-            opc = int(input("Seleccione una opción del menú: "))
-
-            match opc:
+            opcion_menu = func.solicitar_opcion_menu(func.mostrar_menu_principal(),[1,2], False)
+            match opcion_menu:
                 case 1:
                     if self.verificar_usuario():
                         print(f"\n¡Inicio de sesión exitoso! Bienvenid@ {self.usuario_autenticado.nombre.title()}")
                         if self.usuario_autenticado.perfil_usuario == self.PERFIL_ADMIN:
-                            self.mostrar_menu_admin()
+                            self.iniciar_menu_admin()
                         elif self.usuario_autenticado.perfil_usuario == self.PERFIL_BIBLIO:
                             self.iniciar_menu_biblio()
                         elif self.usuario_autenticado.perfil_usuario == self.PERFIL_USUARIO:
@@ -409,8 +400,9 @@ class AppGarageU:
                 case 2:
                     self.usuario_autenticado = None
                     print("\nAPLICACIÓN FINALIZADA CORRECTAMENTE.")
+                    break
                 case _:
-                    print("opcion incorrecta")
+                    print("\nOpción incorrecta")
 
 app = AppGarageU()
 app.main()

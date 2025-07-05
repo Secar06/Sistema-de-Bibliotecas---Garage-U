@@ -19,6 +19,37 @@ class Recurso:
         self.tipo_recurso = tipo_recurso
         self.codigo_alfnum = codigo_alfnum
 
+    def get_coleccion(self):
+        match self.coleccion:
+            case 1:
+                return "GENERAL"
+            case 2:
+                return "RESERVA"
+            case 3:
+                return "HEMEROTECA"
+        return None
+
+    def get_estado(self):
+        match self.estado:
+            case 1:
+                return "PRESTADO"
+            case 2:
+                return "DISPONIBLE"
+        return None
+
+    def get_tipo_recurso(self):
+        match self.tipo_recurso:
+            case 1:
+                return "Libro"
+            case 2:
+                return "Video"
+            case 3:
+                return "Audio"
+            case 4:
+                return "Revista"
+        return None
+
+
     def solicitar_datos(self):
         """
         Solicita y valida los datos generales del recurso.
