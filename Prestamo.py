@@ -12,4 +12,4 @@ class Prestamo:
             self.fecha_devolucion = fecha_devolucion
 
     def get_id(self):
-        return self.id
+        return self.indice_prestamo
