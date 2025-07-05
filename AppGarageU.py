@@ -6,7 +6,8 @@ from Revista import Revista
 from Video import Video
 from Usuario import Usuario
 from Prestamo import Prestamo
-from Funcionalidades import *
+from datetime import date, timedelta
+import Funcionalidades as func
 
 class AppGarageU():
     """ En esta clase llamada AppGarageU se lleva a cabo las funcionalidades del programa, como registrar un nuevo usuario, verificar el usuario,
@@ -279,36 +280,97 @@ class AppGarageU():
             print(f"Hay un total de {self.contador_recursos} recursos")
             numero_recurso_arreglo = int(input("Ingrese el numero de inventario del recurso que desea modificar")) 
             place_holder_recurso = self.arreglo_recursos[numero_recurso_arreglo - 1]
-            place_holder_recurso.modificar_datos()  
+            place_holder_recurso.modificar_datos()
+
         else:
             print("No hay recursos registrados")
 
+    
+    def puede_prestar_usuario(self, id_usuario):
+        persona = func.buscar_entidad(self.arreglo_usuarios, id_usuario)
+        if persona == None:
+            print("El usuario no fue encontrado en la base de datos")
+        elif persona.multa != 0:
+            if func.buscar_entidad(self.arreglo_prestamos, id_usuario) == None:
+                return True
+        return False
+            
+    def es_prestable(self, cod_recurso):
+        recurso = func.buscar_entidad(self.arreglo_recursos, cod_recurso)
+        if recurso == None:
+            print("El recurso no fue encontrado en la base de datos")
+        elif recurso.estado != 2:
+            return False
+        else:
+            return True
+    
+    def calcular_fecha_devolucion(self,cod_recurso, id_usuario):
+        recurso = func.buscar_entidad(self.arreglo_recursos, cod_recurso)
+        usuario = func.buscar_entidad(self.arreglo_usuarios, id_usuario)
+        if usuario.tipo_usuario == 1:
+            match recurso.coleccion:
+                case 1:
+                    fecha_devolucion = date.today() + timedelta(days=15)
+                    print(f"La fecha de devolución es: {fecha_devolucion.strftime("%d") + " " + fecha_devolucion.strftime("%B") + " " + fecha_devolucion.strftime("%Y")}")
+                    return fecha_devolucion
+                case 2:
+                    fecha_devolucion = date.today() + timedelta(days=1)
+                    print(f"La fecha de devolución es: {fecha_devolucion.strftime("%d") + " " + fecha_devolucion.strftime("%B") + " " + fecha_devolucion.strftime("%Y")}")
+                    return fecha_devolucion
+                case 3:
+                    fecha_devolucion = date.today() + timedelta(days=3)
+                    print(f"La fecha de devolución es: {fecha_devolucion.strftime("%d") + " " + fecha_devolucion.strftime("%B") + " " + fecha_devolucion.strftime("%Y")}")
+                    return fecha_devolucion
+        else:
+            match recurso.coleccion:
+                case 1:
+                    fecha_devolucion = date.today() + timedelta(days=30)
+                    print(f"La fecha de devolución es: {fecha_devolucion.strftime("%d") + " " + fecha_devolucion.strftime("%B") + " " + fecha_devolucion.strftime("%Y")}")
+                    return fecha_devolucion
+                case 2:
+                    fecha_devolucion = date.today() + timedelta(days=15)
+                    print(f"La fecha de devolución es: {fecha_devolucion.strftime("%d") + " " + fecha_devolucion.strftime("%B") + " " + fecha_devolucion.strftime("%Y")}")
+                    return fecha_devolucion
+                case 3:
+                    fecha_devolucion = date.today() + timedelta(days=22)
+                    print(f"La fecha de devolución es: {fecha_devolucion.strftime("%d") + " " + fecha_devolucion.strftime("%B") + " " + fecha_devolucion.strftime("%Y")}")
+                    return fecha_devolucion
+
     def registrar_prestamo(self):
         if self.contador_prestamos >= self.MAX_PRESTAMOS:
-            print("No se puede realizar el registro del recurso.\n Causa: almacenamiento insuficiente en el sistema.")
+            print("No se puede realizar el registro del prestamo.\n Causa: almacenamiento insuficiente en el sistema.")
             return
-        elif self.usuario_autenticado.perfil_usuario in [1, 2]:
-                #1 es para admin y 2 para bibliotecario
-                input("Seleccionó la opción 1. Presione Enter para continuar")
-                while True:
-                    try:
-                        buscar_id = int(input("Ingrese la id del usuario al cual se le va generar el prestamo: "))
-                        break
-                    except ValueError:
-                        print("Entrada inválida. Por favor, ingrese un número entero.")
-                while True:
-                    try:
-                        buscar_cod = int(input("Ingrese el codigo de inventario del recurso que va a ser prestado: "))
-                        break
-                    except ValueError:
-                        print("Entrada inválida. Por favor, ingrese un número entero.")
-                for i in range(self.contador_usuarios):
-                    usuario = self.arreglo_usuarios[i]
-                    if usuario.identificacion == buscar_id:
-                        for j in range(self.contador_recursos):
-                            recurso = self.arreglo_recursos[i]
-                            if recurso.numero_inventario == buscar_cod:
-                                
+        else:
+            while True:
+                try:
+                    buscar_id = int(input("Ingrese la id del usuario al cual se le va generar el prestamo: "))
+                    break
+                except ValueError:
+                    print("Entrada inválida. Por favor, ingrese un número entero.")
+            while True:
+                try:
+                    buscar_cod = int(input("Ingrese el codigo de inventario del recurso que va a ser prestado: "))
+                    break
+                except ValueError:
+                    print("Entrada inválida. Por favor, ingrese un número entero.")
+            if not self.puede_prestar_usuario(buscar_id):
+                print("El usuario no puede hacer prestamos.")
+            elif not self.es_prestable(buscar_cod):
+                print("El recurso no esta disponible para prestamos.")
+            else:
+                prestamo = Prestamo()
+                prestamo.indice_prestamo = self.contador_prestamos + 1
+                prestamo.cod_libro = buscar_cod
+                prestamo.id_usuario = buscar_id
+                prestamo.fecha_prestamo = date.today()
+                print(f"La fecha del prestamo es: {prestamo.fecha_prestamo.strftime("%d") + " " + prestamo.fecha_prestamo.strftime("%B") + " " + prestamo.fecha_prestamo.strftime("%Y")}")
+                prestamo.fecha_devolucion = self.calcular_fecha_devolucion(buscar_cod, buscar_id)
+                self.arreglo_prestamos[self.contador_prestamos] = prestamo
+                self.contador_prestamos += 1
+                for i in range(self.contador_recursos):
+                    """if self.arreglo_recursos[i]. == """
+                    pass
+                
 
     def mostrar_menu_usuario(self):
         """
