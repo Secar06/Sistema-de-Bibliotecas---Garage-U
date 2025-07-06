@@ -22,6 +22,7 @@ class AppGarageU:
     arreglo_usuarios = np.ndarray
     arreglo_prestamos = np.ndarray
     historial_recursos = np.ndarray
+    historial_usuarios = np.ndarray
     contador_usuarios = int
     contador_recursos = int
     contador_prestamos = int
@@ -45,6 +46,7 @@ class AppGarageU:
 
         self.arreglo_prestamos, self.contador_prestamos = self.cargar_datos(Prestamo.ARCHIVO, self.MAX_PRESTAMOS)
         self.historial_recursos
+        self.historial_usuarios
         self.registrar_historial("Historial añadido")
         if self.contador_usuarios == 0:
             self.arreglo_usuarios[0] = Usuario(nombre = "Administrador", identificacion=000, contrasenna='000')
@@ -426,9 +428,15 @@ class AppGarageU:
         contador = Counter(top)
         return contador.most_common(5)
         
-    def mostrar_historial_usuario
+    def mostrar_historial_usuario(self):
         print(f"\n Historial del usuario {self.usuario}: \n")
-        
+        if not self.historial_usuarios:
+            print("Este usuario no ha realizado ningún préstamo")
+        return
+        for evento in self.historial_usuarios:
+             fecha = evento["fecha"].strftime("%Y-%m-%d %H:%M:%S")
+             print(f"- [{fecha}] {evento['accion'].capitalize()} por {evento['persona']}")
+            
     
     def modificar_recurso(self):
         if self.contador_recursos > 0:
