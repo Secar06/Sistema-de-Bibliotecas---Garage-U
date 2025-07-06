@@ -7,7 +7,7 @@ from Usuario import Usuario
 from Prestamo import Prestamo
 from Recurso import Recurso
 from datetime import date, timedelta
-import Funcionalidades as func
+import funcionalidades as func
 
 class AppGarageU:
     """ En esta clase llamada AppGarageU se lleva a cabo las funcionalidades del programa, como registrar un nuevo usuario, verificar el usuario,
