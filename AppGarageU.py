@@ -2,7 +2,7 @@ import numpy as np
 from Audio import Audio
 from Libro import Libro
 from Revista import Revista
-from Video import Video
+from Video import Video 
 from Usuario import Usuario
 from Prestamo import Prestamo
 from Recurso import Recurso
@@ -391,7 +391,64 @@ class AppGarageU:
                 else:
                     print(f"\n¡El prestamo con id {prestamo.indice_prestamo} ha sido registrado correctamente!")
                     print("=" * 50)
-       
+    
+    def registrar_devolucion(self):
+        while True:
+            try:
+                buscar_cod = int(input("Ingrese el codigo de inventario del recurso prestado: "))
+                break
+            except ValueError:
+                print("Entrada inválida. Por favor, ingrese un número entero")
+        while True:
+            try:
+                buscar_id = int(input("Ingrese la identificación del usuario"))
+                break
+            except ValueError:
+                print("Entrada inválida. Por favor, ingrese un número entero")
+        for i in range(self.MAX_PRESTAMOS):
+            prestamo = self.arreglo_prestamos[i]
+            if buscar_cod == prestamo.cod_recurso and buscar_id == prestamo.id_usuario:
+                mora = self.calcular_mora(prestamo.fecha_devolucion)
+                if mora > 0:
+                    print(f"El usuario debe {mora} pesos por retraso en la devolucion")
+                else:
+                    print("El recurso fue devuelto a tiempo, no se generó recargo por mora")
+                flag = True
+                while flag == True:
+                    for i in range(self.MAX_USUARIOS):
+                        persona = self.arreglo_usuarios[i]
+                        if persona.identificacion == buscar_id:
+                            persona.multa = mora
+                            self.arreglo_usuarios[i] = persona
+                            if not self.guardar_datos(self.arreglo_usuarios, Usuario.ARCHIVO):
+                                print("No se pudo guardar el archivo de usaurios")
+                            else:
+                                print("\n¡Datos del usuario actualizados correctamente!")
+                            flag = False
+                            return flag
+                flag = True
+                while flag == True:
+                    for i in range(self.MAX_RECURSOS):
+                        recurso = self.arreglo_recursos[i]
+                        if recurso.numero_inventario == buscar_cod:
+                            recurso.estado = 2
+                            self.arreglo_recursos[i] = recurso
+                            if not self.guardar_datos(self.arreglo_recursos, Recurso.ARCHIVO):
+                                print("No se pudo guardar el archivo de recursos")
+                            else:
+                                print("\n¡Datos del recurso actualizados correctamente!")
+                            flag = False
+                            return flag
+                print("La devolución fue registrada de manera exitosa")
+            else:
+                print("Error. El usuario y/o el recurso son incorrectos o no tienen un prestamo registrado.")
+    
+    def calcular_mora(self, fecha_devolucion):
+        mora = (date.today() - fecha_devolucion).days * 1000
+        if mora < 0:
+            mora = 0
+        return mora
+
     def modificar_recurso(self):
         if self.contador_recursos > 0:
             print(f"Hay un total de {self.contador_recursos} recursos")
