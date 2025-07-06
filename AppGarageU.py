@@ -20,6 +20,7 @@ class AppGarageU:
     arreglo_recursos = np.ndarray
     arreglo_usuarios = np.ndarray
     arreglo_prestamos = np.ndarray
+    historial_recursos = np.ndarray
     contador_usuarios = int
     contador_recursos = int
     contador_prestamos = int
@@ -42,7 +43,8 @@ class AppGarageU:
         self.arreglo_recursos, self.contador_recursos = self.cargar_datos(Recurso.ARCHIVO, self.MAX_RECURSOS)
 
         self.arreglo_prestamos, self.contador_prestamos = self.cargar_datos(Prestamo.ARCHIVO, self.MAX_PRESTAMOS)
-
+        self.historial_recursos
+        self.registrar_historial("Historial añadido")
         if self.contador_usuarios == 0:
             self.arreglo_usuarios[0] = Usuario(nombre = "Administrador", identificacion=000, contrasenna='000')
             self.arreglo_usuarios[0].cambiar_perfil(self.PERFIL_ADMIN)
@@ -389,9 +391,39 @@ class AppGarageU:
                 if not self.guardar_datos(self.arreglo_prestamos, Prestamo.ARCHIVO):
                     print("No se pudo guardar el archivo de prestamos")
                 else:
+                    evento = {
+                        "fecha": datetime.now(),
+                        "accion": "prestado",
+                        "persona": self.usuario
+                    }
+                    self.historial_recursos.append(evento)
                     print(f"\n¡El prestamo con id {prestamo.indice_prestamo} ha sido registrado correctamente!")
                     print("=" * 50)
-       
+
+    def mostrar_historial_recurso(self):
+        print(f"\nHistorial del recurso ... :")
+        if not self.historial_recursos:
+            print("Aún no ha sido prestado.")
+            return
+        for evento in self.historial_recursos:
+            fecha = evento["fecha"].strftime("%Y-%m-%d %H:%M:%S")
+            print(f"- [{fecha}] {evento['accion'].capitalize()} por {evento['persona']}")
+
+    def veces_prestado(self):
+        return sum(1 for evento in self.historial_recursos if evento["accion"] == "prestado")
+
+    def mostrar_top5(self):
+        print("\n Top 5 recursos más prestados: \n")
+        top = sorted(key=lambda AppGarageU: AppGarageU.veces_prestado(), reverse = True)[:5]
+        if not top:
+            print("No hay registros de prestamos")
+            return
+        print(f"{'Código':<10} {'Título':<40} {'# Préstamos'}")
+        print("-" * 65)
+        for Libro in top:
+            print(f"{Libro.codigo:<10} {Libro.titulo:<40} {Libro.veces_prestado():>10}")
+        
+                    
     def modificar_recurso(self):
         if self.contador_recursos > 0:
             print(f"Hay un total de {self.contador_recursos} recursos")
@@ -544,7 +576,8 @@ class AppGarageU:
                     return
 
         print("No se encontró un recurso con ese número de inventario.")
-
+        
+    
     def main(self):
         opc = 0
         while opc != 2:
