@@ -383,7 +383,7 @@ class AppGarageU:
                 prestamo.id_usuario = buscar_id
                 prestamo.fecha_prestamo = date.today()
                 print(f"La fecha del prestamo es: {prestamo.fecha_prestamo.strftime("%d") + " " + prestamo.fecha_prestamo.strftime("%B") + " " + prestamo.fecha_prestamo.strftime("%Y")}")
-                prestamo.fecha_devolucion = self.calcular_fecha_devolucion(buscar_cod, buscar_id)
+                prestamo.fecha_devolucion_estimada = self.calcular_fecha_devolucion(buscar_cod, buscar_id)
                 self.arreglo_prestamos[self.contador_prestamos] = prestamo
                 self.contador_prestamos += 1
                 if not self.guardar_datos(self.arreglo_prestamos, Prestamo.ARCHIVO):
@@ -408,7 +408,8 @@ class AppGarageU:
         for i in range(self.MAX_PRESTAMOS):
             prestamo = self.arreglo_prestamos[i]
             if buscar_cod == prestamo.cod_recurso and buscar_id == prestamo.id_usuario:
-                mora = self.calcular_mora(prestamo.fecha_devolucion)
+                mora = self.calcular_mora(prestamo.fecha_devolucion_estimada)
+                prestamo.fecha_devolucion = date.today()
                 if mora > 0:
                     print(f"El usuario debe {mora} pesos por retraso en la devolucion")
                 else:
