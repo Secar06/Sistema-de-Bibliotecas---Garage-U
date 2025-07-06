@@ -391,7 +391,13 @@ class AppGarageU:
                 else:
                     print(f"\n¡El prestamo con id {prestamo.indice_prestamo} ha sido registrado correctamente!")
                     print("=" * 50)
-                
+       
+    def modificar_recurso(self):
+        if self.contador_recursos > 0:
+            print(f"Hay un total de {self.contador_recursos} recursos")
+            numero_recurso_arreglo = int(input("Ingrese el numero de inventario del recurso que desea modificar")) 
+            place_holder_recurso = self.arreglo_recursos[numero_recurso_arreglo - 1]
+            place_holder_recurso.modificar_datos()  
 
     def iniciar_menu_usuario(self):
         """

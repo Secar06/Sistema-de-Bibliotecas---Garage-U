@@ -32,3 +32,96 @@ class Audio(Recurso):
                 break
             except ValueError:
                 print("Entrada inválida. Por favor, ingrese un número entero para el año.")
+    def mostrar_datos(self):
+        print(f"Titulo: {self.titulo} \nCódigo alfanumérico: {self.codigo_alfnum} \nNombre del cantante: {self.nom_cantante} \nNombre del productor: {self.nom_productor} \nAño de grabación: {self.year_grabacion}")
+    
+    def modificar_datos(self):
+        """
+        Permite modificar los datos del recurso tipo audio,
+        validando entradas vacías y tipos numéricos.
+        """
+        print("\n--- Modificar datos del recurso de audio ---")
+
+        print(f"Código actual: {self.codigo_alfnum}")
+        while True:
+            opcion = input("¿Desea modificar el código? (s/n): ").lower()
+            if opcion == "s":
+                while True:
+                    nuevo_codigo = input("Nuevo código alfanumérico: ").strip()
+                    if nuevo_codigo:
+                        self.codigo_alfnum = nuevo_codigo
+                        break
+                    else:
+                        print("El código no puede estar vacío.")
+                break
+            elif opcion == "n":
+                break
+            else:
+                print("Respuesta inválida. Responda con 's' o 'n'.")
+
+        print(f"Título actual: {self.titulo}")
+        while True:
+            opcion = input("¿Desea modificar el título? (s/n): ").lower()
+            if opcion == "s":
+                while True:
+                    nuevo_titulo = input("Nuevo título: ").strip()
+                    if nuevo_titulo:
+                        self.titulo = nuevo_titulo
+                        break
+                    else:
+                        print("El título no puede estar vacío.")
+                break
+            elif opcion == "n":
+                break
+            else:
+                print("Respuesta inválida. Responda con 's' o 'n'.")
+
+        print(f"Cantante actual: {self.nom_cantante}")
+        while True:
+            opcion = input("¿Desea modificar el nombre del cantante? (s/n): ").lower()
+            if opcion == "s":
+                while True:
+                    nuevo_cantante = input("Nuevo nombre del cantante: ").strip()
+                    if nuevo_cantante:
+                        self.nom_cantante = nuevo_cantante
+                        break
+                    else:
+                        print("El nombre del cantante no puede estar vacío.")
+                break
+            elif opcion == "n":
+                break
+            else:
+                print("Respuesta inválida. Responda con 's' o 'n'.")
+
+        print(f"Productor actual: {self.nom_productor}")
+        while True:
+            opcion = input("¿Desea modificar el nombre del productor? (s/n): ").lower()
+            if opcion == "s":
+                while True:
+                    nuevo_productor = input("Nuevo nombre del productor: ").strip()
+                    if nuevo_productor:
+                        self.nom_productor = nuevo_productor
+                        break
+                    else:
+                        print("El nombre del productor no puede estar vacío.")
+                break
+            elif opcion == "n":
+                break
+            else:
+                print("Respuesta inválida. Responda con 's' o 'n'.")
+
+        print(f"Año de grabación actual: {self.year_grabacion}")
+        while True:
+            opcion = input("¿Desea modificar el año de grabación? (s/n): ").lower()
+            if opcion == "s":
+                while True:
+                    try:
+                        self.year_grabacion = int(input("Nuevo año de grabación: "))
+                        break
+                    except ValueError:
+                        print("Por favor, ingrese un número válido para el año.")
+                break
+            elif opcion == "n":
+                break
+            else:
+                print("Respuesta inválida. Responda con 's' o 'n'.")
