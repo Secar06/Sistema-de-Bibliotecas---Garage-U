@@ -534,6 +534,18 @@ class AppGarageU:
                             input("\n[ADMIN] Ha seleccionado la opción 5. Presione Enter para continuar...")
                             self.modificar_recurso()
                         case 6:
+                            print("\n" + "=" * 50)
+                            print(" MENÚ DE ADMINISTRADOR - GENERAR PRESTAMO ")
+                            print("=" * 50)
+                            input("\n[ADMIN] Ha seleccionado la opción 6. Presione Enter para continuar...")
+                            self.registrar_prestamo()
+                        case 7:
+                            print("\n" + "=" * 50)
+                            print(" MENÚ DE ADMINISTRADOR - GENERAR DEVOLUCIÓN ")
+                            print("=" * 50)
+                            input("\n[ADMIN] Ha seleccionado la opción 7. Presione Enter para continuar...")
+                            self.registrar_devolucion()
+                        case 8:
                             input("\n[ADMIN] Se ha cerrado la sesión correctamente. Presione Enter para continuar...")
                             return
                         case _:
