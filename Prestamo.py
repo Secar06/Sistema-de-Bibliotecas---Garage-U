@@ -1,3 +1,4 @@
+import datetime as date
 class Prestamo:
     """
     Esta clase representa un prestamo de un recurso a un usuario.
