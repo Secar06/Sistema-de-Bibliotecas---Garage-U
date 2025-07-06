@@ -7,6 +7,7 @@ from Usuario import Usuario
 from Prestamo import Prestamo
 from Recurso import Recurso
 from datetime import date, timedelta
+from collections import Counter
 import funcionalidades as func
 
 class AppGarageU:
@@ -414,7 +415,7 @@ class AppGarageU:
 
     def mostrar_top5(self):
         print("\n Top 5 recursos más prestados: \n")
-        top = sorted(key=lambda AppGarageU: AppGarageU.veces_prestado(), reverse = True)[:5]
+        top = {k: v for k, v in sorted(self.arreglo_recursos() key=lambda , reverse = True)}
         if not top:
             print("No hay registros de prestamos")
             return
@@ -422,8 +423,13 @@ class AppGarageU:
         print("-" * 65)
         for Libro in top:
             print(f"{Libro.codigo:<10} {Libro.titulo:<40} {Libro.veces_prestado():>10}")
+        contador = Counter(top)
+        return contador.most_common(5)
         
-                    
+    def mostrar_historial_usuario
+        print(f"\n Historial del usuario {self.usuario}: \n")
+        
+    
     def modificar_recurso(self):
         if self.contador_recursos > 0:
             print(f"Hay un total de {self.contador_recursos} recursos")
