@@ -7,6 +7,8 @@ class Recurso:
     Clase base que representa un recurso general de la biblioteca.
     Puede ser un libro, video, audio o revista.
     """
+    ARCHIVO = "datos_recursos.npy"
+    
     def __init__(self, numero_inventario=-1, titulo="", coleccion=0,
                  estado=0, tipo_recurso=0, codigo_alfnum=""):
         """
@@ -49,6 +51,8 @@ class Recurso:
                 return "Revista"
         return None
 
+    def get_id(self):
+        return self.numero_inventario
 
     def solicitar_datos(self):
         """

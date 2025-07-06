@@ -1,3 +1,12 @@
+from datetime import date, timedelta
+def buscar_entidad(arreglo, id):
+    for i in range(len(arreglo)):
+        entidad = arreglo[i]
+        if entidad is None:
+            break
+        elif entidad.get_id() == id:
+            return entidad
+        
 def validar_opcion_menu(lista, opcion):
     """Verifica que una opcion se encuentra en una lista de opciones.
             PARAMS
@@ -65,8 +74,9 @@ def mostrar_menu_admin():
         "1. Registrar un nuevo usuario\n"
         "2. Modificar un usuario\n" 
         "3. Registrar un nuevo recurso\n"
-        "4. Inhabilitar Un recurso\n"
-        "5. Cerrar sesión")
+        "4. Inhabilitar un recurso\n"
+        "5. Modificar un recurso\n"
+        "6. Cerrar sesión")
 
 def mostrar_menu_biblio():
     """Imprime el menú del bibliotecario."""

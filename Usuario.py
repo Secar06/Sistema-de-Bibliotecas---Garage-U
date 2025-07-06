@@ -46,6 +46,9 @@ class Usuario():
         self.tipo_usuario = tipo_usuario
         self.perfil_usuario = perfil_usuario
 
+    def get_id(self):
+        return self.identificacion
+
     def get_perfil_usuario(self):
         match self.perfil_usuario:
             case 1:
