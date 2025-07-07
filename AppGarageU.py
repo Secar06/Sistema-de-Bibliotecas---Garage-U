@@ -395,7 +395,7 @@ class AppGarageU:
                     print("No se pudo guardar el archivo de prestamos")
                 else:
                     evento = {
-                        "fecha": datetime.now(),
+                        "fecha": date.today(),
                         "accion": "prestado",
                         "persona": self.usuario
                     }
@@ -417,7 +417,10 @@ class AppGarageU:
 
     def mostrar_top5(self):
         print("\n Top 5 recursos más prestados: \n")
-        top = {k: v for k, v in sorted(self.arreglo_recursos() key=lambda , reverse = True)}
+        """top = {k: v for k, v in sorted(self.arreglo_recursos() key=lambda , reverse = True)}
+        top = {k: v for k, v in sorted(self.arreglo_recursos.items(), key=lambda item: item[1], reverse=True)}"""
+        top = sorted(self.arreglo_recursos, key=lambda recurso: recurso.titulo, reverse=True)
+
         if not top:
             print("No hay registros de prestamos")
             return
@@ -499,7 +502,7 @@ class AppGarageU:
 
     def listado_morosos(self):
         for j in range(self.MAX_PRESTAMOS):
-            prestamo = self.arreglo_prestamos[i]
+            prestamo = self.arreglo_prestamos[j]
             usuario = func.buscar_entidad(self.arreglo_usuarios, prestamo.id_usuario)
             if usuario.identificacion == prestamo.id_usuario and usuario.multa > 0:
                 tiempo_atraso = (date.today() - prestamo.fecha_devolucion_estimada).days
