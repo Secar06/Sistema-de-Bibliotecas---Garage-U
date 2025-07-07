@@ -1,3 +1,5 @@
+import funcionalidades as func
+
 class Usuario():
     """
     Esta clase represeta el usuario de la biblioteca GarageU y se encarga de almacenar los datos personales del usuario.
@@ -20,19 +22,20 @@ class Usuario():
     Fecha: 01/06/2025
     """
     # ATRIBUTOS
-    nombre = str
-    direccion =str
-    telefono = int
-    email = str
-    identificacion = int
-    multa = int
-    tipo_usuario = int
-    perfil_usuario= int
-    contrasenna = str
+    nombre : str
+    direccion : str
+    telefono : int
+    email : str
+    identificacion : int
+    multa : int
+    tipo_usuario : int
+    perfil_usuario : int
+    contrasenna : str
     ARCHIVO = "datos_usuarios.npy"
 
     # CONSTRUCTOR
-    def __init__(self, nombre="", identificacion=0, contrasenna='', direccion="", telefono="", email="", multa=0, tipo_usuario=-1, perfil_usuario=-1):
+    def __init__(self, nombre = "", identificacion = 0, contrasenna = '', direccion = "", telefono = 0, email = "",
+                 multa = 0, tipo_usuario = -1, perfil_usuario = -1):
         """
         Inicializa los atributos del usuario con valores por defecto.
         """
@@ -46,8 +49,74 @@ class Usuario():
         self.tipo_usuario = tipo_usuario
         self.perfil_usuario = perfil_usuario
 
-    def get_id(self):
-        return self.identificacion
+    @property
+    def nombre(self):
+        return self._nombre
+
+    @nombre.setter
+    def nombre(self, nombre : str):
+        nombre_sin_espacios = nombre.strip(' ').split()
+        for i in nombre_sin_espacios:
+            for j in i:
+                if j not in func.ABECEDARIO:
+                    raise ValueError
+        self._nombre = nombre.title()
+
+    @property
+    def telefono(self):
+        return self._telefono
+
+    @telefono.setter
+    def telefono(self, telefono):
+        self._telefono = telefono
+
+    @property
+    def email(self):
+        return self._email
+
+    @email.setter
+    def email(self, email):
+        self._email = email
+
+    @property
+    def contrasenna(self):
+        return self._contrasenna
+
+    @contrasenna.setter
+    def contrasenna(self, contrasenna):
+        self._contrasenna = contrasenna
+
+    @property
+    def identificacion(self):
+        return self._identificacion
+
+    @identificacion.setter
+    def identificacion(self, identificacion):
+        self._identificacion = identificacion
+
+    @property
+    def multa(self):
+        return self._multa
+
+    @multa.setter
+    def multa(self, multa):
+        self._multa = multa
+
+    @property
+    def tipo_usuario(self):
+        return self._tipo_usuario
+
+    @tipo_usuario.setter
+    def tipo_usuario(self, tipo_usuario):
+        self._tipo_usuario = tipo_usuario
+
+    @property
+    def perfil_usuario(self):
+        return self._perfil_usuario
+
+    @perfil_usuario.setter
+    def perfil_usuario(self, nuevo_perfil_usuario):
+        self._perfil_usuario = nuevo_perfil_usuario
 
     def get_perfil_usuario(self):
         match self.perfil_usuario:
@@ -132,7 +201,8 @@ class Usuario():
             print("1. Estudiante \n2. Empleado")
             self.tipo_usuario = int(input("Seleccione una opción del menú: "))
 
-            # Cuando el usuario selecciona empleado, se le pide determinar su perfil llamando al metodo determinar_perfil_usuario.
+            # Cuando el usuario selecciona empleado,
+            # se le pide determinar su perfil llamando al metodo determinar_perfil_usuario.
             match self.tipo_usuario:
                 case 1:
                     self.tipo_usuario = 1
@@ -143,71 +213,6 @@ class Usuario():
                 case _:
                     input("\n[ADMIN] Opción incorrecta. Inténtelo nuevamente. Presione Enter para continuar...")
         return
-
-    def actualizar_datos(self, usuario_autenticado):
-        """
-        Permite al usuario (o a un administrador) modificar sus datos personales.
-        """
-        mensaje = "\n¡Información actualizada exitosamente! Presione Enter para continuar..."
-        option = -1
-        while option != 7:
-            print("")
-            print("=" * 25)
-            print(" ACTUALIZACIÓN DE DATOS ")
-            print("=" * 25)
-
-            # Se verifica el tipo de usuario y perfil para mostrarlo entre las opciones
-            match self.tipo_usuario:
-                case 1:
-                    user_type = "Estudiante"
-                case 2:
-                    user_type = "Empleado"
-
-            match self.perfil_usuario:
-                case 1:
-                    user_profile = "Administrador"
-                case 2:
-                    user_profile = "Bibliotecario"
-                case 3:
-                    user_profile = "Usuario"
-
-            # Menú de opciones
-            print(f"1. Tipo de Usuario: {user_type} \n2. Perfil de Usuario: {user_profile} \n3. Nombre: {self.nombre} \n4. Dirección: {self.direccion}\n5. Teléfono: {self.telefono}\n6. Correo Electrónico: {self.email}\n7. Volver al menú principal")
-            option = int(input("Seleccione una opción del menú: "))
-            match option:
-                case 1:
-                    # Se verifica que el usuario autenticado sea administrador. En tal caso, se le permite modificar el tipo de usuario.
-                    if usuario_autenticado.perfil_usuario == 1:
-                        input("[ADMIN] Seleccionó la opción 1. Presione Enter para continuar")
-                        self.determinar_tipo_usuario()
-                        input(mensaje)
-                    else:
-                        input("[ERROR] No cuenta con el acceso para editar su tipo de usuario. Presione Enter para continuar...")
-                case 2:
-                    # Se verifica que el usuario autenticado sea administrador. En tal caso, se le permite modificar el perfil de un usuario.
-                    if usuario_autenticado.perfil_usuario == 1:
-                        input("[ADMIN] Seleccionó la opción 2. Presione Enter para continuar")
-                        self.determinar_perfil_usuario()
-                        input(mensaje)
-                    else:
-                        input("[ERROR] No cuenta con el acceso para editar su tipo de usuario. Presione Enter para continuar...")
-                case 3:
-                    self.nombre = input("Ingrese el nombre completo: ").title()
-                    input(mensaje)
-                case 4:
-                    self.direccion = input("Ingrese la dirección de residencia: ").lower()
-                    input(mensaje)
-                case 5:
-                    self.telefono = input("Ingrese el número de teléfono: ")
-                    input(mensaje)
-                case 6:
-                    self.email = input("Ingrese el correo electrónico: ").lower()
-                    input(mensaje)
-                case 7:
-                    input("Regresando al menú principal. Presione Enter para continuar...")
-                    return
-                case _:
-                    input("Opción incorrecta. Inténtelo nuevamente. Presione enter para continuar...")
 
     def mostrar_datos(self):
         return(

@@ -1,3 +1,5 @@
+from idlelib.mainmenu import menudefs
+
 import numpy as np
 from Audio import Audio
 from Libro import Libro
@@ -136,29 +138,79 @@ class AppGarageU:
                 return True
         return False
 
-    def modificar_usuario(self, id_a_buscar):
-        if self.contador_usuarios > 0:
-            for i in range(self.contador_usuarios):
-                usuario = self.arreglo_usuarios[i]
-                if usuario.identificacion == id_a_buscar:
-                    usuario.actualizar_datos(self.usuario_autenticado)
-                    self.arreglo_usuarios[i] = usuario
+    def actualizar_datos_usuario(self, usuario_a_actualizar):
+        """
+        Permite al usuario (o a un administrador) modificar sus datos personales.
+        """
+        mensaje_exitoso = "\n¡Información actualizada exitosamente! Presione Enter para continuar..."
+        option = -1
+        while option != 7:
+            print("")
+            print("=" * 25)
+            print(" ACTUALIZACIÓN DE DATOS ")
+            print("=" * 25)
 
-                    # Guarda en el archivo los datos de los usuarios
-                    if not self.guardar_datos(self.arreglo_usuarios, Usuario.ARCHIVO):
-                        print("No se pudo guardar el archivo de usaurios")
-                    else:
-                        print("\nSe actualizó el archivo de usuarios")
+            # Se verifica el tipo de usuario y perfil para mostrarlo entre las opciones
+            user_type = usuario_a_actualizar.get_tipo_usuario()
+            user_profile = usuario_a_actualizar.get_perfil_usuario()
 
-            input(f"\n[ADMIN] No se encontró un usuario identificado con: {id_a_buscar}. Presione Enter para continuar...")
-            print("\n"*20)
-        else:
-            print("No hay usuarios registrados en el sistema.")
+            # Menú de opciones
+            lista_opciones = [1, 2, 3, 4, 5, 6, 7]
+            menu = (
+                f"1. Tipo de Usuario: {user_type}"
+                f"2. Perfil de Usuario: {user_profile}"
+                f"3. Nombre: {usuario_a_actualizar.nombre}"
+                f"4. Dirección: {usuario_a_actualizar.direccion}"
+                f"5. Teléfono: {usuario_a_actualizar.telefono}"
+                f"6. Correo Electrónico: {usuario_a_actualizar.email}"
+                f"7. Volver al menú principal")
+
+            option = func.solicitar_opcion_menu(menu, lista_opciones)
+            if option is None:
+                return
+            elif option not in lista_opciones:
+                input("Opción incorrecta. Inténtelo nuevamente. Presione enter para continuar...")
+            elif not option in [1, 2]:
+                match option:
+                    case 3:
+                        while True:
+                            nombre_nuevo = input("Ingrese el nombre completo o presione Enter para cancelar: ")
+                            if nombre_nuevo == "":
+                                break
+                            try:
+                                usuario_a_actualizar.nombre = nombre_nuevo
+                            except ValueError:
+                                print("\nDebe ingresar al menos un nombre y un apellido. Por favor intente nuevamente.")
+                            else:
+                                input(mensaje_exitoso)
+                    case 4:
+                        usuario_a_actualizar.direccion = input("Ingrese la dirección de residencia: ")
+                        input(mensaje_exitoso)
+                    case 5:
+                        usuario_a_actualizar.telefono = input("Ingrese el número de teléfono: ")
+                        input(mensaje_exitoso)
+                    case 6:
+                        usuario_a_actualizar.email = input("Ingrese el correo electrónico: ").lower()
+                        input(mensaje_exitoso)
+                    case 7:
+                        input("Regresando al menú principal. Presione Enter para continuar...")
+                        return
+            else:
+                if usuario_a_actualizar.perfil_usuario != self.PERFIL_ADMIN:
+                    input(
+                        "[ERROR] No cuenta con el acceso para editar su tipo de usuario."
+                        " Presione Enter para volver al menú anterior...")
+                elif option == 1:
+                    usuario_a_actualizar.determinar_tipo_usuario()
+                elif option == 2:
+                    usuario_a_actualizar.determinar_perfil_usuario()
+                input(mensaje_exitoso)
 
     def eliminar_usuario(self, id_usuario):
         """
-
         """
+        while True:
+            usuario_a_eliminar = input("Ingrese la identificación del usuario que desea eliminar: ")
 
     def verificar_usuario(self):
         """
@@ -169,8 +221,6 @@ class AppGarageU:
         print("\n" + "=" * 50)
         print("                INICIO DE SESIÓN             ")
         print("=" * 50)
-
-
         identificacion = int(input("Ingrese su número de identificación: "))
         for i in range(self.contador_usuarios):
             usuario = self.arreglo_usuarios[i]
@@ -232,7 +282,15 @@ class AppGarageU:
                 "     MENÚ DE ADMINISTRADOR    \n"
                 "=============================="
 
-            opcion_recurso = func.solicitar_opcion_menu(func.registrar_recurso_menu(),[1,2,3,4])
+            menu = (
+                    "      Registro de Recurso    \n"
+                    "\nIngrese el tipo de recurso:\n"
+                    "1. Libro\n"
+                    "2. Revista\n"
+                    "3. Video\n"
+                    "4. Audio")
+
+            opcion_recurso = func.solicitar_opcion_menu(menu,[1,2,3,4])
             if opcion_recurso is None:
                 return
             else:
@@ -258,35 +316,42 @@ class AppGarageU:
                 print(f"Tipo de recurso: {tipo_recurso}")
                 print("=" * 50)
 
-    def iniciar_menu_usuario(self):
-        """
-        En este método se mostrará el menú del usuario regular, el cual por el momento solo
-        tiene permitido actualizar sus datos.
-        """
-        opcion_usuario = -1
-        while opcion_usuario != 2:
-            while True:
-                opcion_usuario = func.solicitar_opcion_menu(func.mostrar_menu_usuario(),[1, 2])
-                if opcion_usuario is None:
-                    return
-                else:
-                    match opcion_usuario:
-                        case 1:
-                            self.usuario_autenticado.actualizar_datos(self.usuario_autenticado)
-
-                            indice = self.usuario_autenticado.consultar_indice(arreglo=self.arreglo_usuarios)
-
-                            self.arreglo_usuarios[indice] = self.usuario_autenticado
-
-                            # Guarda en el archivo los datos de los usuarios
-                            if not self.guardar_datos(self.arreglo_usuarios, Usuario.ARCHIVO):
-                                print("No se pudo guardar el archivo de usaurios")
-                            else:
-                                print("\nSe actualizó el archivo de usuarios")
-                        case 2:
-                            input("\nSe ha cerrado la sesión correctamente. Presione Enter para continuar...")
-                        case _:
-                            input("\nOpción incorrecta. Inténtelo nuevamente. Presione Enter para continuar...")
+    # MÉTODO INICIAR MENÚ USUARIO DUPLICADO
+    # def iniciar_menu_usuario(self):
+    #     """
+    #     En este método se mostrará el menú del usuario regular, el cual por el momento solo
+    #     tiene permitido actualizar sus datos.
+    #     """
+    #     opcion_usuario = -1
+    #     while opcion_usuario != 2:
+    #         while True:
+    #             menu = (
+    #                     "==============================\n"
+    #                     "         MENÚ DE USUARIO      \n"
+    #                     "==============================\n"
+    #                     "1. Actualizar datos\n"
+    #                     "2. Cerrar sesión")
+    #             opcion_usuario = func.solicitar_opcion_menu(menu,[1, 2])
+    #             if opcion_usuario is None:
+    #                 return
+    #             else:
+    #                 match opcion_usuario:
+    #                     case 1:
+    #                         self.usuario_autenticado.actualizar_datos(self.usuario_autenticado)
+    #
+    #                         indice = self.usuario_autenticado.consultar_indice(arreglo=self.arreglo_usuarios)
+    #
+    #                         self.arreglo_usuarios[indice] = self.usuario_autenticado
+    #
+    #                         # Guarda en el archivo los datos de los usuarios
+    #                         if not self.guardar_datos(self.arreglo_usuarios, Usuario.ARCHIVO):
+    #                             print("No se pudo guardar el archivo de usaurios")
+    #                         else:
+    #                             print("\nSe actualizó el archivo de usuarios")
+    #                     case 2:
+    #                         input("\nSe ha cerrado la sesión correctamente. Presione Enter para continuar...")
+    #                     case _:
+    #                         input("\nOpción incorrecta. Inténtelo nuevamente. Presione Enter para continuar...") #
 
     def modificar_recurso(self):
         if self.contador_recursos > 0:
@@ -304,7 +369,6 @@ class AppGarageU:
         else:
             print("No hay recursos registrados")
 
-    
     def puede_prestar_usuario(self, id_usuario):
         persona = func.buscar_entidad(self.arreglo_usuarios, id_usuario)
         if persona == None:
@@ -407,13 +471,19 @@ class AppGarageU:
         opcion_usuario = -1
         while opcion_usuario != 2:
             while True:
-                opcion_usuario = func.solicitar_opcion_menu(func.mostrar_menu_usuario(),[1, 2])
+                menu = (
+                    "==============================\n"
+                    "         MENÚ DE USUARIO      \n"
+                    "==============================\n"
+                    "1. Actualizar datos\n"
+                    "2. Cerrar sesión")
+                opcion_usuario = func.solicitar_opcion_menu(menu,[1, 2])
                 if opcion_usuario is None:
                     return
                 else:
                     match opcion_usuario:
                         case 1:
-                            self.usuario_autenticado.actualizar_datos(self.usuario_autenticado)
+                            self.usuario_autenticado.actualizar_datos_usuario(self.usuario_autenticado)
 
                             indice = self.usuario_autenticado.consultar_indice(arreglo=self.arreglo_usuarios)
 
@@ -438,50 +508,69 @@ class AppGarageU:
         """
         opcion_admin = -1
         while opcion_admin != 6:
-            while True:
-                opcion_admin = func.solicitar_opcion_menu(func.mostrar_menu_admin(),[1,2,3,4,5,6], False)
-                if opcion_admin not in [1,2,3,4,5,6]:
-                    print("Opción no válida. Por favor inténtelo nuevamente...")
-                else:
-                    match opcion_admin:
-                        case 1:
-                            input("\n[ADMIN] Ha seleccionado la opción 1. Presione Enter para continuar...")
-                            print("\n" + "=" * 50)
-                            print("   MENÚ DE ADMINISTRADOR - REGISTRO DE USUARIO ")
-                            print("=" * 50)
-                            self.registrar_usuario()
-                        case 2:
-                            print("\n" + "=" * 50)
-                            print(" MENÚ DE ADMINISTRADOR - MODIFICACIÓN DE REGISTROS ")
-                            print("=" * 50)
-                            input("\n[ADMIN] Ha seleccionado la opción 2. Presione Enter para continuar...")
-                            user_id = int(input("\nDigite el número de documento del usuario: "))
-                            self.modificar_usuario(user_id)
-                            print("\n"*20)
-                        case 3:
-                            print("\n" + "=" * 50)
-                            print(" MENÚ DE ADMINISTRADOR - REGISTRO DE RECURSO ")
-                            print("=" * 50)
-                            input("\n[ADMIN] Ha seleccionado la opción 3. Presione Enter para continuar...")
-                            self.registrar_recurso()
-                        case 4:
-                            print("\n" + "=" * 50)
-                            print(" MENÚ DE ADMINISTRADOR - INHABILITACIÓN DE RECURSO ")
-                            print("=" * 50)
-                            input("\n[ADMIN] Ha seleccionado la opción 4. Presione Enter para continuar...")
-                            self.inhabilitar_recurso()
-                        case 5:
-                            print("\n" + "=" * 50)
-                            print(" MENÚ DE ADMINISTRADOR - MODIFICACIÓN DE RECURSO ")
-                            print("=" * 50)
-                            input("\n[ADMIN] Ha seleccionado la opción 5. Presione Enter para continuar...")
-                            self.modificar_recurso()
-                        case 6:
-                            input("\n[ADMIN] Se ha cerrado la sesión correctamente. Presione Enter para continuar...")
-                            return
-                        case _:
-                            input("\n[ADMIN] Opción incorrecta. Inténtelo nuevamente. Presione Enter para continuar...")
+            menu = (
+                    "\n==============================\n"
+                    "     MENÚ DE ADMINISTRADOR    \n"
+                    "==============================\n"
+                    "1. Registrar un nuevo usuario\n"
+                    "2. Eliminar un usuario\n"
+                    "3. Modificar un usuario\n" 
+                    "4. Registrar un nuevo recurso\n"
+                    "5. Inhabilitar un recurso\n"
+                    "6. Modificar un recurso\n"
+                    "7. Cerrar sesión")
 
+            opcion_admin = func.solicitar_opcion_menu(menu,[1,2,3,4,5,6], False)
+            if opcion_admin not in [1,2,3,4,5,6]:
+                print("Opción no válida. Por favor inténtelo nuevamente...")
+            else:
+                match opcion_admin:
+                    case 1:
+                        input("\n[ADMIN] Ha seleccionado la opción 1. Presione Enter para continuar...")
+                        print("\n" + "=" * 50)
+                        print("   MENÚ DE ADMINISTRADOR - REGISTRO DE USUARIO ")
+                        print("=" * 50)
+                        self.registrar_usuario()
+                    case 2:
+                        self.eliminar_usuario()
+                    case 3:
+                        print("\n" + "=" * 50)
+                        print(" MENÚ DE ADMINISTRADOR - MODIFICACIÓN DE REGISTROS ")
+                        print("=" * 50)
+                        input("\n[ADMIN] Ha seleccionado la opción 2. Presione Enter para continuar...")
+                        if self.contador_usuarios == 0:
+                            print("No hay usuarios registrados en el sistema.")
+                        else:
+                            user_id = int(input("\nDigite el número de documento del usuario: "))
+                            usuario_encontrado = func.buscar_entidad(self.arreglo_usuarios, user_id)
+                            if not usuario_encontrado:
+                                input("El usuario con número de documento '' no se encuentra registrado en el sistema. "
+                                      " Por favor, intente de nuevo. Presione Enter para volver al menú anterior...")
+                            else:
+                                self.actualizar_datos_usuario(usuario_encontrado)
+                    case 4:
+                        print("\n" + "=" * 50)
+                        print(" MENÚ DE ADMINISTRADOR - REGISTRO DE RECURSO ")
+                        print("=" * 50)
+                        input("\n[ADMIN] Ha seleccionado la opción 3. Presione Enter para continuar...")
+                        self.registrar_recurso()
+                    case 5:
+                        print("\n" + "=" * 50)
+                        print(" MENÚ DE ADMINISTRADOR - INHABILITACIÓN DE RECURSO ")
+                        print("=" * 50)
+                        input("\n[ADMIN] Ha seleccionado la opción 4. Presione Enter para continuar...")
+                        self.inhabilitar_recurso()
+                    case 6:
+                        print("\n" + "=" * 50)
+                        print(" MENÚ DE ADMINISTRADOR - MODIFICACIÓN DE RECURSO ")
+                        print("=" * 50)
+                        input("\n[ADMIN] Ha seleccionado la opción 5. Presione Enter para continuar...")
+                        self.modificar_recurso()
+                    case 7:
+                        input("\n[ADMIN] Se ha cerrado la sesión correctamente. Presione Enter para continuar...")
+                        return
+                    case _:
+                        input("\n[ADMIN] Opción incorrecta. Inténtelo nuevamente. Presione Enter para continuar...")
 
     def iniciar_menu_biblio(self):
         """
@@ -492,7 +581,14 @@ class AppGarageU:
         """
         opcion_biblio = -1
         while opcion_biblio != 3:
-            opcion_biblio = func.solicitar_opcion_menu(func.mostrar_menu_biblio(),[1,2,3], False)
+            menu = (
+                    "\n==============================\n"
+                    "     MENÚ DE BIBLIOTECARIO    \n"
+                    "==============================\n"
+                    "1. Registrar un nuevo recurso\n"
+                    "2. Inhabilitar Recurso\n"
+                    "3. Cerrar sesión\n")
+            opcion_biblio = func.solicitar_opcion_menu(menu,[1,2,3], False)
             match opcion_biblio:
                 case 1:
                     self.registrar_recurso()
@@ -548,7 +644,13 @@ class AppGarageU:
     def main(self):
         opc = 0
         while opc != 2:
-            opcion_menu = func.solicitar_opcion_menu(func.mostrar_menu_principal(),[1,2], False)
+            menu = (
+                    "\n============================\n"
+                    "       MENÚ PRINCIPAL       \n"
+                    "============================\n"
+                    "1. Autenticarse\n"
+                    "2. Salir de la app")
+            opcion_menu = func.solicitar_opcion_menu(menu,[1,2], False)
             match opcion_menu:
                 case 1:
                     if self.verificar_usuario():
