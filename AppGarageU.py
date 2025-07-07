@@ -450,6 +450,17 @@ class AppGarageU:
             mora = 0
         return mora
 
+    def listado_morosos(self):
+        for j in range(self.MAX_PRESTAMOS):
+            prestamo = self.arreglo_prestamos[i]
+            usuario = func.buscar_entidad(self.arreglo_usuarios, prestamo.id_usuario)
+            if usuario.identificacion == prestamo.id_usuario and usuario.multa > 0:
+                tiempo_atraso = (date.today() - prestamo.fecha_devolucion_estimada).days
+                recurso = func.buscar_entidad(self.arreglo_recursos, prestamo.cod_recurso)
+                print("=" * 50)
+                print(f"el usuario {usuario.nombre}, con identidificacion {usuario.identificacion} \ntiene una multa por mora de:{usuario.multa} pesos ya que tiene {tiempo_atraso} dias atrasados\nRecurso prestado: {recurso.titulo} \n Numero de inventario {recurso.numero_inventario}")
+
+
     def modificar_recurso(self):
         if self.contador_recursos > 0:
             print(f"Hay un total de {self.contador_recursos} recursos")
