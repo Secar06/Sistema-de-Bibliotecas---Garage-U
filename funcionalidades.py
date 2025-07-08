@@ -1,4 +1,8 @@
 from datetime import date, timedelta
+
+ABECEDARIO = "abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+
 def buscar_entidad(arreglo, id):
     for i in range(len(arreglo)):
         entidad = arreglo[i]
@@ -6,6 +10,15 @@ def buscar_entidad(arreglo, id):
             break
         elif entidad.get_id() == id:
             return entidad
+
+def buscar_usuario(arreglo, id):
+    for i in range(len(arreglo)):
+        entidad = arreglo[i]
+        if entidad is None:
+            break
+        elif entidad.get_id() == id:
+            return i
+    return None
         
 def validar_opcion_menu(lista, opcion):
     """Verifica que una opcion se encuentra en una lista de opciones.
@@ -44,56 +57,3 @@ def solicitar_opcion_menu(menu, lista, salir = bool):
                     return opcion_usuario
                 else:
                     print("\nLa opcion ingresada es incorrecta, por favor intente nuevamente...")
-
-def registrar_recurso_menu():
-    """Imprime el menú de Registro de Recursos"""
-    return (
-        "      Registro de Recurso    \n"
-        "\nIngrese el tipo de recurso:\n"
-        "1. Libro\n"
-        "2. Revista\n"
-        "3. Video\n"
-        "4. Audio")
-
-def mostrar_menu_usuario():
-    """Imprime el menú del usuario."""
-    return(
-        "==============================\n"
-        "         MENÚ DE USUARIO      \n"
-        "==============================\n"
-        "1. Actualizar datos\n"
-        "2. Cerrar sesión")
-
-
-def mostrar_menu_admin():
-    """Imprime el menú del usuario."""
-    return (
-        "\n==============================\n"
-        "     MENÚ DE ADMINISTRADOR    \n"
-        "==============================\n"
-        "1. Registrar un nuevo usuario\n"
-        "2. Modificar un usuario\n" 
-        "3. Registrar un nuevo recurso\n"
-        "4. Inhabilitar un recurso\n"
-        "5. Modificar un recurso\n"
-        "6. Cerrar sesión")
-
-def mostrar_menu_biblio():
-    """Imprime el menú del bibliotecario."""
-    return (
-        "\n==============================\n"
-        "     MENÚ DE BIBLIOTECARIO    \n"
-        "==============================\n"
-        "1. Registrar un nuevo recurso\n"
-        "2. Inhabilitar Recurso\n"
-        "3. Cerrar sesión\n")
-
-def mostrar_menu_principal():
-    """Imprime el menú del administrador."""
-    return (
-    "\n============================\n"
-    "       MENÚ PRINCIPAL       \n"
-    "============================\n"
-    "1. Autenticarse\n"
-    "2. Salir de la app")
-
