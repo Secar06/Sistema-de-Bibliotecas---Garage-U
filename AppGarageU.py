@@ -49,7 +49,6 @@ class AppGarageU:
         self.arreglo_prestamos, self.contador_prestamos = self.cargar_datos(Prestamo.ARCHIVO, self.MAX_PRESTAMOS)
         self.historial_recursos
         self.historial_usuarios
-        self.registrar_historial("Historial añadido")
         if self.contador_usuarios == 0:
             self.arreglo_usuarios[0] = Usuario(nombre = "Administrador", identificacion=000, contrasenna='000')
             self.arreglo_usuarios[0].cambiar_perfil(self.PERFIL_ADMIN)
@@ -530,8 +529,8 @@ class AppGarageU:
                     print("\n")
             if cont == 0:
                 print(f"No se encontró ningún resultado con '{texto}'.\n")
-        else:
-            input("\n No se encuentra ningún recurso guardado. Presione Enter para continuar")
+            else:
+                input("\n No se encuentra ningún recurso guardado. Presione Enter para continuar")
 
     def buscar_recurso_codigo(self):
         if self.contador_recursos > 0:
@@ -659,10 +658,10 @@ class AppGarageU:
 
     def modificar_recurso(self):
       if self.contador_recursos > 0:
-      print(f"Hay un total de {self.contador_recursos} recursos")
-      numero_recurso_arreglo = int(input("Ingrese el numero de inventario del recurso que desea modificar"))
-      place_holder_recurso = self.arreglo_recursos[numero_recurso_arreglo - 1]
-      place_holder_recurso.modificar_datos()
+        print(f"Hay un total de {self.contador_recursos} recursos")
+        numero_recurso_arreglo = int(input("Ingrese el numero de inventario del recurso que desea modificar"))
+        place_holder_recurso = self.arreglo_recursos[numero_recurso_arreglo - 1]
+        place_holder_recurso.modificar_datos()
 
 
     def iniciar_menu_usuario(self):
