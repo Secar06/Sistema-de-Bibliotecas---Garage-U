@@ -1,3 +1,5 @@
+from idlelib.mainmenu import menudefs
+
 import funcionalidades as func
 
 class Usuario():
@@ -35,7 +37,7 @@ class Usuario():
 
     # CONSTRUCTOR
     def __init__(self, nombre = "", identificacion = 0, contrasenna = '', direccion = "", telefono = 0, email = "",
-                 multa = 0, tipo_usuario = -1, perfil_usuario = -1):
+                 multa = 0, tipo_usuario = 1, perfil_usuario = 3):
         """
         Inicializa los atributos del usuario con valores por defecto.
         """
@@ -54,7 +56,10 @@ class Usuario():
         return self._nombre
 
     @nombre.setter
-    def nombre(self, nombre : str):
+    def nombre(self, nombre):
+        if not isinstance(nombre, str):
+            raise TypeError
+
         nombre_sin_espacios = nombre.strip(' ').split()
         for i in nombre_sin_espacios:
             for j in i:
@@ -141,11 +146,27 @@ class Usuario():
         Permite al usuario ingresar sus datos básicos desde la app.
         Luego llama al método 'determinar_tipo_usuario' para asignar su tipo de usuario.
         """
-        self.contrasenna = input("Ingrese una contraseña para el usuario: ")
-        self.nombre = input("Ingrese el nombre completo: ")
+        while True:
+            try:
+                self.nombre = input("Ingrese el nombre completo: ")
+                break
+            except ValueError:
+                print("\nDebe ingresar al menos un nombre y un apellido. Por favor intente nuevamente.")
         self.direccion = input("Ingrese la dirección de residencia: ")
-        self.telefono = int(input("Digite el número de teléfono: "))
-        self.email = input("Ingrese el correo electrónico: ")
+
+        while True:
+            try:
+                self.telefono = int(input("Digite el número de teléfono: "))
+                break
+            except ValueError:
+                print("Número de teléfono no válido. Ingrese un número de teléfono de 10 dígitos.")
+        while True:
+            try:
+                self.email = input("Ingrese el correo electrónico: ")
+                break
+            except ValueError:
+                print("Correo electrónico no válido. Por favor intente de nuevo...")
+
         self.determinar_tipo_usuario()
 
     def cambiar_perfil(self, nuevo_perfil):
@@ -159,47 +180,48 @@ class Usuario():
         Pide al usuario que seleccione su perfil: Administrador o Bibliotecario.
         Se repite hasta que la entrada sea válida.
         """
-        self.perfil_usuario = 0
-        while self.perfil_usuario not in [1,2]:
-            # Encabezado
-            print("")
-            print("=" * 25)
-            print(" Perfil de Usuario  ")
-            print("=" * 25)
+        while True:
+            # Menú de ppciones para determinar el perfil del usuario.
+            menu = (
+            "=============================\n"
+            "      Perfil de Usuario      \n"
+            "=============================\n"
+            "1. Administrador\n"
+            "2. Bibliotecario")
 
-            # Opciones
-            print("1. Administrador \n2. Bibliotecario")
-            self.perfil_usuario = int(input("Seleccione una opción del menú: "))
+            opcion_perfil_usuario = func.solicitar_opcion_menu(menu, [1, 2], True)
+            if opcion_perfil_usuario is None:
+                return None
+
+            self.perfil_usuario = opcion_perfil_usuario
 
             # Según sea el caso, se le asigna el valor correspondiente al perfil de usuario seleccionado
             match self.perfil_usuario:
                 case 1:
                     self.perfil_usuario = 1
                     self.tipo_usuario = 2
-                    return
                 case 2:
                     self.perfil_usuario = 2
                     self.tipo_usuario = 2
-                    return
                 case _:
                     input("\n[ADMIN] Opción incorrecta. Inténtelo nuevamente. Presione Enter para continuar...")
-        return
+            return None
 
     def determinar_tipo_usuario(self):
         """
         Solicita al usuario que seleccione su tipo (Estudiante o Empleado).
         En caso de seleccionar Empleado, se debe escoger un perfil.
         """
-        self.tipo_usuario = 0
-        while self.tipo_usuario not in [1,2]:
-            # Encabezado
-            print("")
-            print("=" * 25)
-            print(" Tipo de Usuario  ")
-            print("=" * 25)
-            # Opciones
-            print("1. Estudiante \n2. Empleado")
-            self.tipo_usuario = int(input("Seleccione una opción del menú: "))
+        while True:
+            menu = (
+            "===================\n"
+            "   Tipo de Usuario  \n"
+            "==================="
+            "1. Estudiante\n"
+            "2. Empleado")
+            opcion_tipo_usuario = func.solicitar_opcion_menu(menu, [1, 2], True)
+            if opcion_tipo_usuario is None:
+                return None
 
             # Cuando el usuario selecciona empleado,
             # se le pide determinar su perfil llamando al metodo determinar_perfil_usuario.
@@ -212,7 +234,7 @@ class Usuario():
                     self.determinar_perfil_usuario()
                 case _:
                     input("\n[ADMIN] Opción incorrecta. Inténtelo nuevamente. Presione Enter para continuar...")
-        return
+            return None
 
     def mostrar_datos(self):
         return(
@@ -220,9 +242,9 @@ class Usuario():
             f"Identificación: {self.identificacion}\n"
             f"Contraseña: {self.identificacion}\n"
             f"Nombre completo: {self.nombre}\n"
-            f"Dirección: {self.direccion.lower()}\n"
+            f"Dirección: {self.direccion}\n"
             f"Teléfono: {self.telefono}\n"
-            f"Email registrado: {self.email.lower()}\n"
+            f"Email registrado: {self.email}\n"
             f"Multa: {self.multa}\n"
             "========================================\n"
             f"{self.get_tipo_usuario()}\n"

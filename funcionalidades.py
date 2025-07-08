@@ -10,6 +10,15 @@ def buscar_entidad(arreglo, id):
             break
         elif entidad.get_id() == id:
             return entidad
+
+def buscar_usuario(arreglo, id):
+    for i in range(len(arreglo)):
+        entidad = arreglo[i]
+        if entidad is None:
+            break
+        elif entidad.get_id() == id:
+            return i
+    return None
         
 def validar_opcion_menu(lista, opcion):
     """Verifica que una opcion se encuentra en una lista de opciones.

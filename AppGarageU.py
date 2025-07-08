@@ -100,7 +100,7 @@ class AppGarageU:
         almacena los nuevos usuarios registrados en el sistema, y por medio de un match case se identifica qué tipo de usuario se registra
         """
         if self.contador_usuarios <= self.MAX_USUARIOS:
-            user = Usuario()
+            nuevo_usuario = Usuario()
             while True:
                 input_identificacion = input("\nIngrese el número de identificación del nuevo usuario o presione Enter para cancelar: ")
                 if input_identificacion == "":
@@ -116,17 +116,19 @@ class AppGarageU:
                             f" Por favor ingrese una identificación diferente.")
                         break
                     else:
-                        # user.almacenar_datos()
-                        # self.arreglo_usuarios[self.contador_usuarios] = user
-                        # self.contador_usuarios += 1
-                        #
-                        # # Guarda en el archivo los datos de los usuarios
+                        # nuevo_usuario.almacenar_datos()
+                        nuevo_usuario.contrasenna = input("Ingrese una contraseña para el usuario: ")
+                        self.actualizar_datos_usuario(nuevo_usuario)
+                        self.arreglo_usuarios[self.contador_usuarios] = nuevo_usuario
+                        self.contador_usuarios += 1
+
+                        # Guarda en el archivo los datos de los usuarios
                         # if not self.guardar_datos(self.arreglo_usuarios, Usuario.ARCHIVO):
                         #     print("No se pudo guardar el archivo de usaurios")
                         # else:
                         #     print("\n[ADMIN] ¡Usuario Registrado Exitosamente!")
 
-                        print(user.mostrar_datos())
+                        print(nuevo_usuario.mostrar_datos())
                         input("\nPresione Enter para volver al menú principal...")
                         return
         else:
@@ -138,17 +140,19 @@ class AppGarageU:
                 return True
         return False
 
-    def actualizar_datos_usuario(self, usuario_a_actualizar):
+    def actualizar_datos_usuario(self, usuario_a_actualizar : Usuario):
         """
         Permite al usuario (o a un administrador) modificar sus datos personales.
         """
         mensaje_exitoso = "\n¡Información actualizada exitosamente! Presione Enter para continuar..."
         option = -1
         while option != 7:
-            print("")
-            print("=" * 25)
-            print(" ACTUALIZACIÓN DE DATOS ")
-            print("=" * 25)
+            menu = (
+            "===========================\n"
+            "  ACTUALIZACIÓN DE DATOS   \n"
+            "===========================\n"
+            f"USUARIO: {usuario_a_actualizar.identificacion}"
+            )
 
             # Se verifica el tipo de usuario y perfil para mostrarlo entre las opciones
             user_type = usuario_a_actualizar.get_tipo_usuario()
@@ -157,17 +161,17 @@ class AppGarageU:
             # Menú de opciones
             lista_opciones = [1, 2, 3, 4, 5, 6, 7]
             menu = (
-                f"1. Tipo de Usuario: {user_type}"
-                f"2. Perfil de Usuario: {user_profile}"
-                f"3. Nombre: {usuario_a_actualizar.nombre}"
-                f"4. Dirección: {usuario_a_actualizar.direccion}"
-                f"5. Teléfono: {usuario_a_actualizar.telefono}"
-                f"6. Correo Electrónico: {usuario_a_actualizar.email}"
-                f"7. Volver al menú principal")
+                f"1. Tipo de Usuario: {user_type}\n"
+                f"2. Perfil de Usuario: {user_profile}\n"
+                f"3. Nombre: {usuario_a_actualizar.nombre}\n"
+                f"4. Dirección: {usuario_a_actualizar.direccion}\n"
+                f"5. Teléfono: {usuario_a_actualizar.telefono}\n"
+                f"6. Correo Electrónico: {usuario_a_actualizar.email}\n"
+                f"7. Guardar datos.")
 
             option = func.solicitar_opcion_menu(menu, lista_opciones)
             if option is None:
-                return
+                return None
             elif option not in lista_opciones:
                 input("Opción incorrecta. Inténtelo nuevamente. Presione enter para continuar...")
             elif not option in [1, 2]:
@@ -180,7 +184,7 @@ class AppGarageU:
                             try:
                                 usuario_a_actualizar.nombre = nombre_nuevo
                             except ValueError:
-                                print("\nDebe ingresar al menos un nombre y un apellido. Por favor intente nuevamente.")
+                                print("\nDebe ingresar al menos un nombre y un apellido. Por favor intente nuevamente.\n")
                             else:
                                 input(mensaje_exitoso)
                     case 4:
@@ -193,8 +197,9 @@ class AppGarageU:
                         usuario_a_actualizar.email = input("Ingrese el correo electrónico: ").lower()
                         input(mensaje_exitoso)
                     case 7:
-                        input("Regresando al menú principal. Presione Enter para continuar...")
-                        return
+                        if self.arrancar_verificaciones():
+                            input(mensaje_exitoso)
+                            return None
             else:
                 if usuario_a_actualizar.perfil_usuario != self.PERFIL_ADMIN:
                     input(
@@ -206,11 +211,51 @@ class AppGarageU:
                     usuario_a_actualizar.determinar_perfil_usuario()
                 input(mensaje_exitoso)
 
-    def eliminar_usuario(self, id_usuario):
+    def arrancar_verificaciones(self, usuario: Usuario):
+        """
+        Verifica que cada campo de los datos del usuario no se dejen vacío. En tal caso retornará False.
+        """
+        bandera = False
+        for i in range(1, 5):
+            match i:
+                case 1:
+                    if usuario.nombre == "":
+                        print("\nParece que el campo nombre está vacío. Por favor ingrese un nombre válido.")
+                        bandera = True
+                        break
+                case 2:
+                    if usuario.direccion == "":
+                        print("\nParece que el campo dirección está vacío. Por favor ingrese una dirección válido.")
+                        bandera = True
+                        break
+                case 3:
+                    if usuario.telefono == 0:
+                        print("\nParece que el campo teléfono se encuentra vacío. Por favor ingrese un número válido.")
+                        bandera = True
+                        break
+                case 4:
+                    if usuario.email == "":
+                        print("\nParece que el campo del correo electrónico se encuentra vacío. Por favor ingrese una dirección de correo válida.")
+                        bandera = True
+                        break
+        return bandera
+
+    def eliminar_usuario(self, indice_usuario):
         """
         """
-        while True:
-            usuario_a_eliminar = input("Ingrese la identificación del usuario que desea eliminar: ")
+        self.arreglo_usuarios[indice_usuario] = None
+        self.contador_usuarios -= 1
+        for i in range(len(self.arreglo_usuarios)):
+            if self.arreglo_usuarios[i] is None:
+                for j in range(len(self.arreglo_usuarios)-i-1):
+                    self.arreglo_usuarios[i] = self.arreglo_usuarios[i+1]
+                    i += 1
+        if not self.guardar_datos(self.arreglo_usuarios, Usuario.ARCHIVO):
+            print("\nNo se pudo guardar el archivo de usaurios")
+        else:
+            print("\n[ADMIN] ¡Usuario Eliminado Exitosamente!")
+
+        return True
 
     def verificar_usuario(self):
         """
@@ -456,12 +501,50 @@ class AppGarageU:
                     print(f"\n¡El prestamo con id {prestamo.indice_prestamo} ha sido registrado correctamente!")
                     print("=" * 50)
        
-    def modificar_recurso(self):
+    # def modificar_recurso(self):
+    #     if self.contador_recursos > 0:
+    #         print(f"Hay un total de {self.contador_recursos} recursos")
+    #         numero_recurso_arreglo = int(input("Ingrese el numero de inventario del recurso que desea modificar"))
+    #         place_holder_recurso = self.arreglo_recursos[numero_recurso_arreglo - 1]
+    #         place_holder_recurso.modificar_datos()
+
+    def buscar_recurso_titulo(self):
         if self.contador_recursos > 0:
-            print(f"Hay un total de {self.contador_recursos} recursos")
-            numero_recurso_arreglo = int(input("Ingrese el numero de inventario del recurso que desea modificar")) 
-            place_holder_recurso = self.arreglo_recursos[numero_recurso_arreglo - 1]
-            place_holder_recurso.modificar_datos()  
+            encabezado = (
+                "=============================\n"
+                "  BUSCAR RECURSO POR TITÚLO \n"
+                "============================="
+            )
+            texto = input("\nIngrese el título o parte de él del recurso a buscar: ")
+            cont = 0
+            for i in range(len(self.arreglo_recursos)):
+                recurso = self.arreglo_recursos[i]
+                titulo = recurso.titulo
+                if texto in titulo:
+                    cont += 1
+                    print(recurso.mostrar_datos())
+                    print("\n")
+            if cont == 0:
+                print(f"No se encontró ningún resultado con '{texto}'.\n")
+        else:
+            input("\n No se encuentra ningún recurso guardado. Presione Enter para continuar")
+
+    def buscar_recurso_codigo(self):
+        if self.contador_recursos > 0:
+            encabezado = (
+                "==================================\n"
+                "  BUSCADOR DE RECURSO POR CÓDIGO \n"
+                "=================================="
+            )
+            cod = int(input("\nIngrese el código de inventario del recurso a buscar: "))
+            recurso = func.buscar_entidad(self.arreglo_recursos, cod)
+            if recurso is not None:
+                print(recurso.mostrar_datos())
+                print("\n")
+            else:
+                print(f"No se encontró ningún resultado con '{cod}'.\n")
+        else:
+            input("\n No se encuentra ningún recurso guardado. Presione Enter para continuar")
 
     def iniciar_menu_usuario(self):
         """
@@ -483,8 +566,7 @@ class AppGarageU:
                 else:
                     match opcion_usuario:
                         case 1:
-                            self.usuario_autenticado.actualizar_datos_usuario(self.usuario_autenticado)
-
+                            self.actualizar_datos_usuario(self.usuario_autenticado)
                             indice = self.usuario_autenticado.consultar_indice(arreglo=self.arreglo_usuarios)
 
                             self.arreglo_usuarios[indice] = self.usuario_autenticado
@@ -518,7 +600,8 @@ class AppGarageU:
                     "4. Registrar un nuevo recurso\n"
                     "5. Inhabilitar un recurso\n"
                     "6. Modificar un recurso\n"
-                    "7. Cerrar sesión")
+                    "7. Buscar recurso por titulo\n"
+                    "8. Cerrar sesión")
 
             opcion_admin = func.solicitar_opcion_menu(menu,[1,2,3,4,5,6], False)
             if opcion_admin not in [1,2,3,4,5,6]:
@@ -532,7 +615,23 @@ class AppGarageU:
                         print("=" * 50)
                         self.registrar_usuario()
                     case 2:
-                        self.eliminar_usuario()
+                        while True:
+                            print(
+                                "====================\n"
+                                "  ELIMINAR USUSARIO \n"
+                                "====================\n"
+                            )
+                            try:
+                                id_usuario_eliminar = int(input("Ingrese la identificación del usuario que desea eliminar: "))
+                            except ValueError:
+                                print("Error con la identificación ingresada. Por favor intente de nuevo...")
+                            else:
+                                indice_usuario = func.buscar_usuario(self.arreglo_usuarios, id_usuario_eliminar)
+                                if indice_usuario is not None:
+                                    self.eliminar_usuario(indice_usuario)
+                                    break
+                                else:
+                                    print("\nNo se encontró un usuario con la identificación ingresada.")
                     case 3:
                         print("\n" + "=" * 50)
                         print(" MENÚ DE ADMINISTRADOR - MODIFICACIÓN DE REGISTROS ")
@@ -567,6 +666,21 @@ class AppGarageU:
                         input("\n[ADMIN] Ha seleccionado la opción 5. Presione Enter para continuar...")
                         self.modificar_recurso()
                     case 7:
+                        print("\n" + "=" * 50)
+                        print(" MENÚ DE ADMINISTRADOR - BUSCADOR DE RECURSOS ")
+                        print("=" * 50)
+                        menu = (
+                            "1. Buscar por título"
+                            "\n2. Buscar por código de inventario")
+
+                        opcion = func.solicitar_opcion_menu(menu,[1,2], True)
+                        if opcion is not None:
+                            match opcion:
+                                case 1:
+                                    self.buscar_recurso_titulo()
+                                case 2:
+                                    self.buscar_recurso_codigo()
+                    case 8:
                         input("\n[ADMIN] Se ha cerrado la sesión correctamente. Presione Enter para continuar...")
                         return
                     case _:
