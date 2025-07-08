@@ -4,11 +4,12 @@ import numpy as np
 from Audio import Audio
 from Libro import Libro
 from Revista import Revista
-from Video import Video
+from Video import Video 
 from Usuario import Usuario
 from Prestamo import Prestamo
 from Recurso import Recurso
 from datetime import date, timedelta
+from collections import Counter
 import funcionalidades as func
 
 class AppGarageU:
@@ -22,6 +23,8 @@ class AppGarageU:
     arreglo_recursos = np.ndarray
     arreglo_usuarios = np.ndarray
     arreglo_prestamos = np.ndarray
+    historial_recursos = np.ndarray
+    historial_usuarios = np.ndarray
     contador_usuarios = int
     contador_recursos = int
     contador_prestamos = int
@@ -44,7 +47,9 @@ class AppGarageU:
         self.arreglo_recursos, self.contador_recursos = self.cargar_datos(Recurso.ARCHIVO, self.MAX_RECURSOS)
 
         self.arreglo_prestamos, self.contador_prestamos = self.cargar_datos(Prestamo.ARCHIVO, self.MAX_PRESTAMOS)
-
+        self.historial_recursos
+        self.historial_usuarios
+        self.registrar_historial("Historial añadido")
         if self.contador_usuarios == 0:
             self.arreglo_usuarios[0] = Usuario(nombre = "Administrador", identificacion=000, contrasenna='000')
             self.arreglo_usuarios[0].cambiar_perfil(self.PERFIL_ADMIN)
@@ -492,24 +497,23 @@ class AppGarageU:
                 prestamo.id_usuario = buscar_id
                 prestamo.fecha_prestamo = date.today()
                 print(f"La fecha del prestamo es: {prestamo.fecha_prestamo.strftime("%d") + " " + prestamo.fecha_prestamo.strftime("%B") + " " + prestamo.fecha_prestamo.strftime("%Y")}")
-                prestamo.fecha_devolucion = self.calcular_fecha_devolucion(buscar_cod, buscar_id)
+                prestamo.fecha_devolucion_estimada = self.calcular_fecha_devolucion(buscar_cod, buscar_id)
                 self.arreglo_prestamos[self.contador_prestamos] = prestamo
                 self.contador_prestamos += 1
                 if not self.guardar_datos(self.arreglo_prestamos, Prestamo.ARCHIVO):
                     print("No se pudo guardar el archivo de prestamos")
                 else:
+                    evento = {
+                        "fecha": date.today(),
+                        "accion": "prestado",
+                        "persona": self.usuario
+                    }
+                    self.historial_recursos.append(evento)
                     print(f"\n¡El prestamo con id {prestamo.indice_prestamo} ha sido registrado correctamente!")
                     print("=" * 50)
-       
-    # def modificar_recurso(self):
-    #     if self.contador_recursos > 0:
-    #         print(f"Hay un total de {self.contador_recursos} recursos")
-    #         numero_recurso_arreglo = int(input("Ingrese el numero de inventario del recurso que desea modificar"))
-    #         place_holder_recurso = self.arreglo_recursos[numero_recurso_arreglo - 1]
-    #         place_holder_recurso.modificar_datos()
 
     def buscar_recurso_titulo(self):
-        if self.contador_recursos > 0:
+      if self.contador_recursos > 0:
             encabezado = (
                 "=============================\n"
                 "  BUSCAR RECURSO POR TITÚLO \n"
@@ -545,6 +549,121 @@ class AppGarageU:
                 print(f"No se encontró ningún resultado con '{cod}'.\n")
         else:
             input("\n No se encuentra ningún recurso guardado. Presione Enter para continuar")
+
+    def mostrar_historial_recurso(self):
+        print(f"\nHistorial del recurso ... :")
+        if not self.historial_recursos:
+            print("Aún no ha sido prestado.")
+            return
+        for evento in self.historial_recursos:
+            fecha = evento["fecha"].strftime("%Y-%m-%d %H:%M:%S")
+            print(f"- [{fecha}] {evento['accion'].capitalize()} por {evento['persona']}")
+
+    def veces_prestado(self):
+        return sum(1 for evento in self.historial_recursos if evento["accion"] == "prestado")
+
+    def mostrar_top5(self):
+        print("\n Top 5 recursos más prestados: \n")
+        """top = {k: v for k, v in sorted(self.arreglo_recursos() key=lambda , reverse = True)}
+        top = {k: v for k, v in sorted(self.arreglo_recursos.items(), key=lambda item: item[1], reverse=True)}"""
+        top = sorted(self.arreglo_recursos, key=lambda recurso: recurso.titulo, reverse=True)
+
+        if not top:
+            print("No hay registros de prestamos")
+            return
+        print(f"{'Código':<10} {'Título':<40} {'# Préstamos'}")
+        print("-" * 65)
+        for Libro in top:
+            print(f"{Libro.codigo:<10} {Libro.titulo:<40} {Libro.veces_prestado():>10}")
+        contador = Counter(top)
+        return contador.most_common(5)
+        
+    def mostrar_historial_usuario(self):
+        print(f"\n Historial del usuario {self.usuario}: \n")
+        if not self.historial_usuarios:
+            print("Este usuario no ha realizado ningún préstamo")
+        return
+        for evento in self.historial_usuarios:
+             fecha = evento["fecha"].strftime("%Y-%m-%d %H:%M:%S")
+             print(f"- [{fecha}] {evento['accion'].capitalize()} por {evento['persona']}")
+            
+   
+    
+    def registrar_devolucion(self):
+        while True:
+            try:
+                buscar_cod = int(input("Ingrese el codigo de inventario del recurso prestado: "))
+                break
+            except ValueError:
+                print("Entrada inválida. Por favor, ingrese un número entero")
+        while True:
+            try:
+                buscar_id = int(input("Ingrese la identificación del usuario"))
+                break
+            except ValueError:
+                print("Entrada inválida. Por favor, ingrese un número entero")
+        for i in range(self.MAX_PRESTAMOS):
+            prestamo = self.arreglo_prestamos[i]
+            if buscar_cod == prestamo.cod_recurso and buscar_id == prestamo.id_usuario:
+                mora = self.calcular_mora(prestamo.fecha_devolucion_estimada)
+                prestamo.fecha_devolucion = date.today()
+                if mora > 0:
+                    print(f"El usuario debe {mora} pesos por retraso en la devolucion")
+                else:
+                    print("El recurso fue devuelto a tiempo, no se generó recargo por mora")
+                flag = True
+                while flag == True:
+                    for i in range(self.MAX_USUARIOS):
+                        persona = self.arreglo_usuarios[i]
+                        if persona.identificacion == buscar_id:
+                            persona.multa = mora
+                            self.arreglo_usuarios[i] = persona
+                            if not self.guardar_datos(self.arreglo_usuarios, Usuario.ARCHIVO):
+                                print("No se pudo guardar el archivo de usaurios")
+                            else:
+                                print("\n¡Datos del usuario actualizados correctamente!")
+                            flag = False
+                            return flag
+                flag = True
+                while flag == True:
+                    for i in range(self.MAX_RECURSOS):
+                        recurso = self.arreglo_recursos[i]
+                        if recurso.numero_inventario == buscar_cod:
+                            recurso.estado = 2
+                            self.arreglo_recursos[i] = recurso
+                            if not self.guardar_datos(self.arreglo_recursos, Recurso.ARCHIVO):
+                                print("No se pudo guardar el archivo de recursos")
+                            else:
+                                print("\n¡Datos del recurso actualizados correctamente!")
+                            flag = False
+                            return flag
+                print("La devolución fue registrada de manera exitosa")
+            else:
+                print("Error. El usuario y/o el recurso son incorrectos o no tienen un prestamo registrado.")
+    
+    def calcular_mora(self, fecha_devolucion):
+        mora = (date.today() - fecha_devolucion).days * 1000
+        if mora < 0:
+            mora = 0
+        return mora
+
+    def listado_morosos(self):
+        for j in range(self.MAX_PRESTAMOS):
+            prestamo = self.arreglo_prestamos[j]
+            usuario = func.buscar_entidad(self.arreglo_usuarios, prestamo.id_usuario)
+            if usuario.identificacion == prestamo.id_usuario and usuario.multa > 0:
+                tiempo_atraso = (date.today() - prestamo.fecha_devolucion_estimada).days
+                recurso = func.buscar_entidad(self.arreglo_recursos, prestamo.cod_recurso)
+                print("=" * 50)
+                print(f"el usuario {usuario.nombre}, con identidificacion {usuario.identificacion} \ntiene una multa por mora de:{usuario.multa} pesos ya que tiene {tiempo_atraso} dias atrasados\nRecurso prestado: {recurso.titulo} \n Numero de inventario {recurso.numero_inventario}")
+
+    def modificar_recurso(self):
+      if self.contador_recursos > 0:
+      print(f"Hay un total de {self.contador_recursos} recursos")
+      numero_recurso_arreglo = int(input("Ingrese el numero de inventario del recurso que desea modificar"))
+      place_holder_recurso = self.arreglo_recursos[numero_recurso_arreglo - 1]
+      place_holder_recurso.modificar_datos()
+
 
     def iniciar_menu_usuario(self):
         """
@@ -589,7 +708,7 @@ class AppGarageU:
         problemas la opción elegida por el usuario administrador.
         """
         opcion_admin = -1
-        while opcion_admin != 6:
+        while opcion_admin != 10:
             menu = (
                     "\n==============================\n"
                     "     MENÚ DE ADMINISTRADOR    \n"
@@ -600,8 +719,10 @@ class AppGarageU:
                     "4. Registrar un nuevo recurso\n"
                     "5. Inhabilitar un recurso\n"
                     "6. Modificar un recurso\n"
-                    "7. Buscar recurso por titulo\n"
-                    "8. Cerrar sesión")
+                    "7. Buscar recurso\n"
+                    "8. Generar préstamo\n"
+                    "9. Generar devolución\n"
+                    "10. Cerrar sesión")
 
             opcion_admin = func.solicitar_opcion_menu(menu,[1,2,3,4,5,6], False)
             if opcion_admin not in [1,2,3,4,5,6]:
@@ -634,7 +755,7 @@ class AppGarageU:
                                     print("\nNo se encontró un usuario con la identificación ingresada.")
                     case 3:
                         print("\n" + "=" * 50)
-                        print(" MENÚ DE ADMINISTRADOR - MODIFICACIÓN DE REGISTROS ")
+                        print(" MENÚ DE ADMINISTRADOR - MODIFICACIÓN DE USUARIO ")
                         print("=" * 50)
                         input("\n[ADMIN] Ha seleccionado la opción 2. Presione Enter para continuar...")
                         if self.contador_usuarios == 0:
@@ -681,10 +802,23 @@ class AppGarageU:
                                 case 2:
                                     self.buscar_recurso_codigo()
                     case 8:
+                        print("\n" + "=" * 50)
+                        print(" MENÚ DE ADMINISTRADOR - GENERAR PRESTAMO ")
+                        print("=" * 50)
+                        input("\n[ADMIN] Ha seleccionado la opción 6. Presione Enter para continuar...")
+                        self.registrar_prestamo()
+                    case 9:
+                        print("\n" + "=" * 50)
+                        print(" MENÚ DE ADMINISTRADOR - GENERAR DEVOLUCIÓN ")
+                        print("=" * 50)
+                        input("\n[ADMIN] Ha seleccionado la opción 7. Presione Enter para continuar...")
+                        self.registrar_devolucion() 
+                    case 10:
                         input("\n[ADMIN] Se ha cerrado la sesión correctamente. Presione Enter para continuar...")
                         return
                     case _:
                         input("\n[ADMIN] Opción incorrecta. Inténtelo nuevamente. Presione Enter para continuar...")
+
 
     def iniciar_menu_biblio(self):
         """
@@ -754,7 +888,8 @@ class AppGarageU:
                     return
 
         print("No se encontró un recurso con ese número de inventario.")
-
+        
+    
     def main(self):
         opc = 0
         while opc != 2:
