@@ -308,7 +308,7 @@ class AppGarageU:
             booleano: Verdadero si se eliminó el usuario con éxito.
         """
         while True:
-            continuar = input("\nSeguro que desea eliminar el usuario? (S/N): ").upper()
+            continuar = input("\n¿Seguro que desea eliminar el usuario? (S/N): ").upper()
             match continuar:
                 case 'S':
                     self.arreglo_usuarios[indice_usuario] = None
@@ -941,29 +941,40 @@ class AppGarageU:
                     "Ingrese el número de inventario del recurso que desea inhabilitar o presione Enter para cancelar: "
                     ))
             if numero == "":
-                return
+                return None
             try:
                 numero = int(numero)
-                break
             except ValueError:
                 print("Número de inventario no válido. Por favor inténtelo nuevamente")
+            else:
+                continuar = input("\n¿Seguro que desea inhabilitar el recurso? (S/N): ?").upper()
+                match continuar:
+                    case 'S':
+                        for i in range(self.contador_recursos):
+                            recurso = self.arreglo_recursos[i]
+                            if recurso.numero_inventario == numero:
+                                if recurso.estado == 4:
+                                    print("Este recurso ya está inhabilitado.")
+                                    return False
+                                recurso.estado = 4
+                                if not self.guardar_datos(self.arreglo_recursos, Recurso.ARCHIVO):
+                                    print("No se pudo guardar el archivo de recursos")
+                                else:
+                                    print(
+                                        f"\n¡El recurso con número de inventario {recurso.numero_inventario} ha sido inhabilitado correctamente!")
+                                    print("=" * 50)
+                                    print(f"Titulo: {recurso.titulo}")
+                                    return True
+                        input("No se encontró un recurso con ese número de inventario. Presione Enter para continuar...")
+                        return False
+                    case 'N':
+                        return False
+                    case _:
+                        input("\nOpción incorrecta. Por favor vuelva a intentarlo...")
 
-        for i in range(self.contador_recursos):
-            recurso = self.arreglo_recursos[i]
-            if recurso.numero_inventario == numero:
-                if recurso.estado == 4:
-                    print("Este recurso ya está inhabilitado.")
-                    return
-                recurso.estado = 4
-                if not self.guardar_datos(self.arreglo_recursos, Recurso.ARCHIVO):
-                    print("No se pudo guardar el archivo de recursos")
-                else:
-                    print(f"\n¡El recurso con número de inventario {recurso.numero_inventario} ha sido inhabilitado correctamente!")
-                    print("=" * 50)
-                    print(f"Titulo: {recurso.titulo}")
-                    return
 
-        print("No se encontró un recurso con ese número de inventario.")
+
+
         
     
     def main(self):
