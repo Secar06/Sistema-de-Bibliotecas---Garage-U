@@ -29,7 +29,6 @@ class Recurso:
                 return "RESERVA"
             case 3:
                 return "HEMEROTECA"
-        return None
 
     def get_estado(self):
         match self.estado:
@@ -37,7 +36,10 @@ class Recurso:
                 return "PRESTADO"
             case 2:
                 return "DISPONIBLE"
-        return None
+            case 3:
+                return "REPARACIÓN"
+            case 4:
+                return "INACTIVO"
 
     def get_tipo_recurso(self):
         match self.tipo_recurso:
@@ -49,7 +51,7 @@ class Recurso:
                 return "Audio"
             case 4:
                 return "Revista"
-        return None
+
 
     def get_id(self):
         return self.numero_inventario
@@ -77,7 +79,7 @@ class Recurso:
         while True:
             try:
                 self.estado = int(input("Seleccione una opción del menú: "))
-                if self.coleccion in [1, 2, 3, 4]:
+                if self.estado in [1, 2, 3, 4]:
                     break
                 else:
                     print("El estado ingresado es incorrecto, por favor intente nuevamente...")

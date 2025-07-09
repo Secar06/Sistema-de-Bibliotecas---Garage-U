@@ -42,7 +42,7 @@ class Libro(Recurso):
                 print("Entrada inválida. Por favor, ingrese un número entero para la edición.")
                 
     def mostrar_datos(self):
-         print(f"Titulo: {self.titulo} \nCódigo alfanumérico: {self.codigo_alfnum} \nAutor: {self.autor} \nISBN: {self.isbn} \nEditorial {self.editorial} \nEdición: {self.edicion}")
+         print(f"Código alfanumérico: {self.codigo_alfnum} \nAutor: {self.autor} \nISBN: {self.isbn} \nEditorial {self.editorial} \nEdición: {self.edicion}")
     
     def modificar_datos(self):
         """
