@@ -1,5 +1,3 @@
-from idlelib.mainmenu import menudefs
-
 import funcionalidades as func
 
 class Usuario():
@@ -36,7 +34,7 @@ class Usuario():
     ARCHIVO = "datos_usuarios.npy"
 
     # CONSTRUCTOR
-    def __init__(self, nombre = "", identificacion = 0, contrasenna = '', direccion = "", telefono = 0, email = "",
+    def __init__(self, nombre="", identificacion = 0, contrasenna = '', direccion = "", telefono = 0, email = "",
                  multa = 0, tipo_usuario = 1, perfil_usuario = 3):
         """
         Inicializa los atributos del usuario con valores por defecto.

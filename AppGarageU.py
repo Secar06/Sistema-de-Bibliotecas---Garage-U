@@ -46,7 +46,7 @@ class AppGarageU:
 
         self.arreglo_prestamos, self.contador_prestamos = self.cargar_datos(Prestamo.ARCHIVO, self.MAX_PRESTAMOS)
         if self.contador_usuarios == 0:
-            self.arreglo_usuarios[0] = Usuario(nombre = "Administrador", identificacion=000, contrasenna='000')
+            self.arreglo_usuarios[0] = Usuario(nombre = "User Admin", identificacion=000, contrasenna='000')
             self.arreglo_usuarios[0].cambiar_perfil(self.PERFIL_ADMIN)
             self.contador_usuarios = 1
 
@@ -122,10 +122,10 @@ class AppGarageU:
                         self.contador_usuarios += 1
 
                         # Guarda en el archivo los datos de los usuarios
-                        # if not self.guardar_datos(self.arreglo_usuarios, Usuario.ARCHIVO):
-                        #     print("No se pudo guardar el archivo de usaurios")
-                        # else:
-                        #     print("\n[ADMIN] ¡Usuario Registrado Exitosamente!")
+                        if not self.guardar_datos(self.arreglo_usuarios, Usuario.ARCHIVO):
+                            print("No se pudo guardar el archivo de usaurios")
+                        else:
+                            print("\n[ADMIN] ¡Usuario Registrado Exitosamente!")
 
                         print(nuevo_usuario.mostrar_datos())
                         input("\nPresione Enter para volver al menú principal...")
@@ -299,8 +299,13 @@ class AppGarageU:
                         break
         return bandera
 
-    def eliminar_usuario(self, indice_usuario):
+    def eliminar_usuario(self, indice_usuario : int):
         """
+        Elimina un usario del arreglo, actualiaza el contador y ordena los usuarios para rellenar los espacios vacios. Guarda los cambios realizados.
+        PARAMS:
+            indice_usuario: Indice del usuario a ser eliminado del arreglo.
+        RETORNA:
+            booleano: Verdadero si se eliminó el usuario con éxito.
         """
         self.arreglo_usuarios[indice_usuario] = None
         self.contador_usuarios -= 1
@@ -313,7 +318,6 @@ class AppGarageU:
             print("\nNo se pudo guardar el archivo de usaurios")
         else:
             print("\n[ADMIN] ¡Usuario Eliminado Exitosamente!")
-
         return True
 
     def verificar_usuario(self):
@@ -788,13 +792,18 @@ class AppGarageU:
                         self.registrar_usuario()
                     case 2:
                         while True:
+                            input("\n[ADMIN] Ha seleccionado la opción 2. Presione Enter para continuar...")
                             print(
-                                "====================\n"
-                                "  ELIMINAR USUSARIO \n"
-                                "====================\n"
+                                "============================================\n"
+                                " MENÚ DE ADMINISTRADOR - ELIMINAR USUSARIO \n"
+                                "============================================\n"
                             )
+                            id_usuario_eliminar = input(
+                                "Ingrese la identificación del usuario que desea eliminar o presione Enter para cancelar: ")
+                            if id_usuario_eliminar == "":
+                                break
                             try:
-                                id_usuario_eliminar = int(input("Ingrese la identificación del usuario que desea eliminar: "))
+                                id_usuario_eliminar = int(id_usuario_eliminar)
                             except ValueError:
                                 print("Error con la identificación ingresada. Por favor intente de nuevo...")
                             else:
@@ -805,10 +814,10 @@ class AppGarageU:
                                 else:
                                     print("\nNo se encontró un usuario con la identificación ingresada.")
                     case 3:
+                        input("\n[ADMIN] Ha seleccionado la opción 3. Presione Enter para continuar...")
                         print("\n" + "=" * 50)
                         print(" MENÚ DE ADMINISTRADOR - MODIFICACIÓN DE USUARIO ")
                         print("=" * 50)
-                        input("\n[ADMIN] Ha seleccionado la opción 2. Presione Enter para continuar...")
                         if self.contador_usuarios == 0:
                             print("No hay usuarios registrados en el sistema.")
                         else:
@@ -820,24 +829,25 @@ class AppGarageU:
                             else:
                                 self.actualizar_datos_usuario(usuario_encontrado)
                     case 4:
+                        input("\n[ADMIN] Ha seleccionado la opción 4. Presione Enter para continuar...")
                         print("\n" + "=" * 50)
                         print(" MENÚ DE ADMINISTRADOR - REGISTRO DE RECURSO ")
                         print("=" * 50)
-                        input("\n[ADMIN] Ha seleccionado la opción 3. Presione Enter para continuar...")
                         self.registrar_recurso()
                     case 5:
+                        input("\n[ADMIN] Ha seleccionado la opción 5. Presione Enter para continuar...")
                         print("\n" + "=" * 50)
                         print(" MENÚ DE ADMINISTRADOR - INHABILITACIÓN DE RECURSO ")
                         print("=" * 50)
-                        input("\n[ADMIN] Ha seleccionado la opción 4. Presione Enter para continuar...")
                         self.inhabilitar_recurso()
                     case 6:
+                        input("\n[ADMIN] Ha seleccionado la opción 6. Presione Enter para continuar...")
                         print("\n" + "=" * 50)
                         print(" MENÚ DE ADMINISTRADOR - MODIFICACIÓN DE RECURSO ")
                         print("=" * 50)
-                        input("\n[ADMIN] Ha seleccionado la opción 5. Presione Enter para continuar...")
                         self.modificar_recurso()
                     case 7:
+                        input("\n[ADMIN] Ha seleccionado la opción 7. Presione Enter para continuar...")
                         print("\n" + "=" * 50)
                         print(" MENÚ DE ADMINISTRADOR - BUSCADOR DE RECURSOS ")
                         print("=" * 50)
@@ -853,17 +863,17 @@ class AppGarageU:
                                 case 2:
                                     self.buscar_recurso_codigo()
                     case 8:
+                        input("\n[ADMIN] Ha seleccionado la opción 8. Presione Enter para continuar...")
                         print("\n" + "=" * 50)
                         print(" MENÚ DE ADMINISTRADOR - GENERAR PRESTAMO ")
                         print("=" * 50)
-                        input("\n[ADMIN] Ha seleccionado la opción 6. Presione Enter para continuar...")
                         self.registrar_prestamo()
                     case 9:
+                        input("\n[ADMIN] Ha seleccionado la opción 9. Presione Enter para continuar...")
                         print("\n" + "=" * 50)
                         print(" MENÚ DE ADMINISTRADOR - GENERAR DEVOLUCIÓN ")
                         print("=" * 50)
-                        input("\n[ADMIN] Ha seleccionado la opción 7. Presione Enter para continuar...")
-                        self.registrar_devolucion() 
+                        self.registrar_devolucion()
                     case 10:
                         input("\n[ADMIN] Se ha cerrado la sesión correctamente. Presione Enter para continuar...")
                         return
