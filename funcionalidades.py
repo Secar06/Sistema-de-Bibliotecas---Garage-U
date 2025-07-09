@@ -1,6 +1,6 @@
 from datetime import date, timedelta
 
-ABECEDARIO = "abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+ABECEDARIO = "abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZáéíóú"
 
 
 def buscar_entidad(arreglo, id):
@@ -16,21 +16,9 @@ def buscar_usuario(arreglo, id):
         entidad = arreglo[i]
         if entidad is None:
             break
-        elif entidad.get_id() == id:
+        elif entidad.identificacion == id:
             return i
     return None
-        
-def validar_opcion_menu(lista, opcion):
-    """Verifica que una opcion se encuentra en una lista de opciones.
-            PARAMS
-                lista: lista de opciones válidas.
-                opcion: número escogido por el usuario.
-        Retorna True si efectivamente se encuentra en la lista, de lo contrario retorna False.
-    """
-    if opcion in lista:
-        return True
-    else:
-        return False
 
 def solicitar_opcion_menu(menu, lista, salir = bool):
     """
@@ -51,9 +39,9 @@ def solicitar_opcion_menu(menu, lista, salir = bool):
             try:
                 opcion_usuario = int(opcion_usuario)
             except ValueError:
-                print("\nEl tipo de dato ingresado es erróneo, por favor ingrese un número del menú.")
+                input("\nEl tipo de dato ingresado es erróneo, presione Enter e intente nuevamente...")
             else:
-                if validar_opcion_menu(lista, opcion_usuario):
+                if opcion_usuario in lista:
                     return opcion_usuario
                 else:
-                    print("\nLa opcion ingresada es incorrecta, por favor intente nuevamente...")
+                    input("\nLa opcion ingresada es incorrecta, presione Enter e intente nuevamente...")

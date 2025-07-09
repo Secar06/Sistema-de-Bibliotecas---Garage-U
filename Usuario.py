@@ -57,9 +57,6 @@ class Usuario():
 
     @nombre.setter
     def nombre(self, nombre):
-        if not isinstance(nombre, str):
-            raise TypeError
-
         nombre_sin_espacios = nombre.strip(' ').split()
         for i in nombre_sin_espacios:
             for j in i:
@@ -174,67 +171,6 @@ class Usuario():
         Cambia el perfil del usuario por el asignado.
         '''
         self.perfil_usuario = nuevo_perfil
-
-    def determinar_perfil_usuario(self):
-        """
-        Pide al usuario que seleccione su perfil: Administrador o Bibliotecario.
-        Se repite hasta que la entrada sea válida.
-        """
-        while True:
-            # Menú de ppciones para determinar el perfil del usuario.
-            menu = (
-            "=============================\n"
-            "      Perfil de Usuario      \n"
-            "=============================\n"
-            "1. Administrador\n"
-            "2. Bibliotecario")
-
-            opcion_perfil_usuario = func.solicitar_opcion_menu(menu, [1, 2], True)
-            if opcion_perfil_usuario is None:
-                return None
-
-            self.perfil_usuario = opcion_perfil_usuario
-
-            # Según sea el caso, se le asigna el valor correspondiente al perfil de usuario seleccionado
-            match self.perfil_usuario:
-                case 1:
-                    self.perfil_usuario = 1
-                    self.tipo_usuario = 2
-                case 2:
-                    self.perfil_usuario = 2
-                    self.tipo_usuario = 2
-                case _:
-                    input("\n[ADMIN] Opción incorrecta. Inténtelo nuevamente. Presione Enter para continuar...")
-            return None
-
-    def determinar_tipo_usuario(self):
-        """
-        Solicita al usuario que seleccione su tipo (Estudiante o Empleado).
-        En caso de seleccionar Empleado, se debe escoger un perfil.
-        """
-        while True:
-            menu = (
-            "===================\n"
-            "   Tipo de Usuario  \n"
-            "==================="
-            "1. Estudiante\n"
-            "2. Empleado")
-            opcion_tipo_usuario = func.solicitar_opcion_menu(menu, [1, 2], True)
-            if opcion_tipo_usuario is None:
-                return None
-
-            # Cuando el usuario selecciona empleado,
-            # se le pide determinar su perfil llamando al metodo determinar_perfil_usuario.
-            match self.tipo_usuario:
-                case 1:
-                    self.tipo_usuario = 1
-                    self.perfil_usuario = 3
-                case 2:
-                    self.tipo_usuario = 2
-                    self.determinar_perfil_usuario()
-                case _:
-                    input("\n[ADMIN] Opción incorrecta. Inténtelo nuevamente. Presione Enter para continuar...")
-            return None
 
     def mostrar_datos(self):
         return(
