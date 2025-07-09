@@ -316,7 +316,6 @@ class AppGarageU:
         el recurso nuevo y se mostrará un mensaje avisando que se registró correctamente el recurso,
         junto con su número de inventario.
         """
-        recurso = object
 
         if self.contador_recursos >= self.MAX_RECURSOS:
             print("No se puede realizar el registro del recurso.\n Causa: almacenamiento insuficiente en el sistema.")
@@ -330,36 +329,47 @@ class AppGarageU:
                 "\n==============================\n"
                 "     MENÚ DE ADMINISTRADOR    \n"
                 "=============================="
+            while True:
+                try:
+                    tipo_recurso = int(input(
+                            "      Registro de Recurso    \n"
+                            "\nIngrese el tipo de recurso:\n"
+                            "1. Libro\n"
+                            "2. Revista\n"
+                            "3. Video\n"
+                            "4. Audio: "))
+                    break
+                except ValueError:
+                    print("Error. intente nuevamente.")
 
-            menu = (
-                    "      Registro de Recurso    \n"
-                    "\nIngrese el tipo de recurso:\n"
-                    "1. Libro\n"
-                    "2. Revista\n"
-                    "3. Video\n"
-                    "4. Audio")
-
-            opcion_recurso = func.solicitar_opcion_menu(menu,[1,2,3,4])
-            if opcion_recurso is None:
+            if tipo_recurso is None:
                 return
             else:
-                match opcion_recurso:
+                match tipo_recurso:
                     case 1:
+                        recurso = Libro()
                         recurso = self.crear_recurso(Libro())
+                        recurso.tipo_recurso = tipo_recurso
                     case 2:
+                        recurso = Revista()
                         recurso = self.crear_recurso(Revista())
+                        recurso.tipo_recurso = tipo_recurso
                     case 3:
+                        recurso = Video()
                         recurso = self.crear_recurso(Video())
+                        recurso.tipo_recurso = tipo_recurso
                     case 4:
+                        recurso = Audio()
                         recurso  = self.crear_recurso(Audio())
+                        recurso.tipo_recurso = tipo_recurso
+                
+                recurso.mostrar_datos()
 
                 coleccion = recurso.get_coleccion()
-                print(f"Tipo de recurso: {coleccion}")
+                print(f"Colección del recurso: {coleccion}")
 
                 estado = recurso.get_estado()
-                print(f"Tipo de recurso: {estado}")
-
-                print(f"Código alfanumérico: {recurso.codigo_alfnum}")
+                print(f"Estado del recurso: {estado}")
 
                 tipo_recurso = recurso.get_tipo_recurso()
                 print(f"Tipo de recurso: {tipo_recurso}")
@@ -512,37 +522,63 @@ class AppGarageU:
                     print("=" * 50)
 
     def buscar_recurso_titulo(self):
-      if self.contador_recursos > 0:
-            encabezado = (
+        if self.contador_recursos > 0:
+            print(
                 "=============================\n"
                 "  BUSCAR RECURSO POR TITÚLO \n"
                 "============================="
             )
             texto = input("\nIngrese el título o parte de él del recurso a buscar: ")
             cont = 0
-            for i in range(len(self.arreglo_recursos)):
+            for i in range(self.MAX_RECURSOS):
                 recurso = self.arreglo_recursos[i]
+                if recurso == None:
+                    break
                 titulo = recurso.titulo
                 if texto in titulo:
                     cont += 1
-                    print(recurso.mostrar_datos())
+                    recurso.mostrar_datos()
+                    coleccion = recurso.get_coleccion()
+                    print(f"Colección del recurso: {coleccion}")
+
+                    estado = recurso.get_estado()
+                    print(f"Estado del recurso: {estado}")
+                
+                    tipo_recurso = recurso.get_tipo_recurso()
+                    print(f"Tipo de recurso: {tipo_recurso}")
+                    print("=" * 50)
                     print("\n")
-            if cont == 0:
-                print(f"No se encontró ningún resultado con '{texto}'.\n")
-            else:
-                input("\n No se encuentra ningún recurso guardado. Presione Enter para continuar")
+                if cont == 0:
+                    print(f"No se encontró ningún resultado con '{texto}'.\n")
+        else:
+            input("\n No se encuentra ningún recurso guardado. Presione Enter para continuar")
+
 
     def buscar_recurso_codigo(self):
         if self.contador_recursos > 0:
-            encabezado = (
+            print(
                 "==================================\n"
                 "  BUSCADOR DE RECURSO POR CÓDIGO \n"
                 "=================================="
             )
-            cod = int(input("\nIngrese el código de inventario del recurso a buscar: "))
+            while True:
+                try:
+                    cod = int(input("\nIngrese el código de inventario del recurso a buscar: "))
+                    break
+                except ValueError:
+                    print("Error, intente nuevamente.")
             recurso = func.buscar_entidad(self.arreglo_recursos, cod)
             if recurso is not None:
-                print(recurso.mostrar_datos())
+                recurso.mostrar_datos()
+                coleccion = recurso.get_coleccion()
+                print(f"Colección del recurso: {coleccion}")
+
+                estado = recurso.get_estado()
+                print(f"Estado del recurso: {estado}")
+
+                tipo_recurso = recurso.get_tipo_recurso()
+                print(f"Tipo de recurso: {tipo_recurso}")
+                print("=" * 50)
                 print("\n")
             else:
                 print(f"No se encontró ningún resultado con '{cod}'.\n")
@@ -723,8 +759,8 @@ class AppGarageU:
                     "9. Generar devolución\n"
                     "10. Cerrar sesión")
 
-            opcion_admin = func.solicitar_opcion_menu(menu,[1,2,3,4,5,6], False)
-            if opcion_admin not in [1,2,3,4,5,6]:
+            opcion_admin = func.solicitar_opcion_menu(menu,[1,2,3,4,5,6,7,8,9,10], False)
+            if opcion_admin not in [1,2,3,4,5,6,7,8,9,10]:
                 print("Opción no válida. Por favor inténtelo nuevamente...")
             else:
                 match opcion_admin:
@@ -735,6 +771,10 @@ class AppGarageU:
                         print("=" * 50)
                         self.registrar_usuario()
                     case 2:
+                        input("\n[ADMIN] Ha seleccionado la opción 2. Presione Enter para continuar...")
+                        print("\n" + "=" * 50)
+                        print("   MENÚ DE ADMINISTRADOR - ELIMINAR USUARIO")
+                        print("=" * 50)
                         while True:
                             print(
                                 "====================\n"
@@ -756,7 +796,7 @@ class AppGarageU:
                         print("\n" + "=" * 50)
                         print(" MENÚ DE ADMINISTRADOR - MODIFICACIÓN DE USUARIO ")
                         print("=" * 50)
-                        input("\n[ADMIN] Ha seleccionado la opción 2. Presione Enter para continuar...")
+                        input("\n[ADMIN] Ha seleccionado la opción 3. Presione Enter para continuar...")
                         if self.contador_usuarios == 0:
                             print("No hay usuarios registrados en el sistema.")
                         else:
@@ -771,31 +811,37 @@ class AppGarageU:
                         print("\n" + "=" * 50)
                         print(" MENÚ DE ADMINISTRADOR - REGISTRO DE RECURSO ")
                         print("=" * 50)
-                        input("\n[ADMIN] Ha seleccionado la opción 3. Presione Enter para continuar...")
+                        input("\n[ADMIN] Ha seleccionado la opción 4. Presione Enter para continuar...")
                         self.registrar_recurso()
                     case 5:
                         print("\n" + "=" * 50)
                         print(" MENÚ DE ADMINISTRADOR - INHABILITACIÓN DE RECURSO ")
                         print("=" * 50)
-                        input("\n[ADMIN] Ha seleccionado la opción 4. Presione Enter para continuar...")
+                        input("\n[ADMIN] Ha seleccionado la opción 5. Presione Enter para continuar...")
                         self.inhabilitar_recurso()
                     case 6:
                         print("\n" + "=" * 50)
                         print(" MENÚ DE ADMINISTRADOR - MODIFICACIÓN DE RECURSO ")
                         print("=" * 50)
-                        input("\n[ADMIN] Ha seleccionado la opción 5. Presione Enter para continuar...")
+                        input("\n[ADMIN] Ha seleccionado la opción 6. Presione Enter para continuar...")
                         self.modificar_recurso()
                     case 7:
+                        input("\n[ADMIN] Ha seleccionado la opción 7. Presione Enter para continuar...")
                         print("\n" + "=" * 50)
                         print(" MENÚ DE ADMINISTRADOR - BUSCADOR DE RECURSOS ")
                         print("=" * 50)
-                        menu = (
-                            "1. Buscar por título"
-                            "\n2. Buscar por código de inventario")
+                        while True:
+                            try:
+                                menu = int(input(
+                                    "1. Buscar por título"
+                                    "\n2. Buscar por código de inventario: "))
+                                break
+                            except ValueError:
+                                print("Error, intente nuevamente.")
 
-                        opcion = func.solicitar_opcion_menu(menu,[1,2], True)
-                        if opcion is not None:
-                            match opcion:
+                        menu
+                        if menu is not None:
+                            match menu:
                                 case 1:
                                     self.buscar_recurso_titulo()
                                 case 2:
@@ -804,13 +850,13 @@ class AppGarageU:
                         print("\n" + "=" * 50)
                         print(" MENÚ DE ADMINISTRADOR - GENERAR PRESTAMO ")
                         print("=" * 50)
-                        input("\n[ADMIN] Ha seleccionado la opción 6. Presione Enter para continuar...")
+                        input("\n[ADMIN] Ha seleccionado la opción 8. Presione Enter para continuar...")
                         self.registrar_prestamo()
                     case 9:
                         print("\n" + "=" * 50)
                         print(" MENÚ DE ADMINISTRADOR - GENERAR DEVOLUCIÓN ")
                         print("=" * 50)
-                        input("\n[ADMIN] Ha seleccionado la opción 7. Presione Enter para continuar...")
+                        input("\n[ADMIN] Ha seleccionado la opción 9. Presione Enter para continuar...")
                         self.registrar_devolucion() 
                     case 10:
                         input("\n[ADMIN] Se ha cerrado la sesión correctamente. Presione Enter para continuar...")
