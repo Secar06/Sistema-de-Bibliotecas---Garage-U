@@ -483,50 +483,116 @@ class AppGarageU:
         problemas la opción elegida por el usuario administrador.
         """
         opcion_admin = -1
-        while opcion_admin != 6:
-            while True:
-                opcion_admin = func.solicitar_opcion_menu(func.mostrar_menu_admin(),[1,2,3,4,5,6], False)
-                if opcion_admin not in [1,2,3,4,5,6]:
-                    print("Opción no válida. Por favor inténtelo nuevamente...")
-                else:
-                    match opcion_admin:
-                        case 1:
-                            input("\n[ADMIN] Ha seleccionado la opción 1. Presione Enter para continuar...")
-                            print("\n" + "=" * 50)
-                            print("   MENÚ DE ADMINISTRADOR - REGISTRO DE USUARIO ")
-                            print("=" * 50)
-                            self.registrar_usuario()
-                        case 2:
-                            print("\n" + "=" * 50)
-                            print(" MENÚ DE ADMINISTRADOR - MODIFICACIÓN DE REGISTROS ")
-                            print("=" * 50)
-                            input("\n[ADMIN] Ha seleccionado la opción 2. Presione Enter para continuar...")
+        while opcion_admin != 10:
+            menu = (
+                    "\n==============================\n"
+                    "     MENÚ DE ADMINISTRADOR    \n"
+                    "==============================\n"
+                    "1. Registrar un nuevo usuario\n"
+                    "2. Eliminar un usuario\n"
+                    "3. Modificar un usuario\n" 
+                    "4. Registrar un nuevo recurso\n"
+                    "5. Inhabilitar un recurso\n"
+                    "6. Modificar un recurso\n"
+                    "7. Buscar recurso\n"
+                    "8. Generar préstamo\n"
+                    "9. Generar devolución\n"
+                    "10. Cerrar sesión")
+
+            opcion_admin = func.solicitar_opcion_menu(menu,[1,2,3,4,5,6,7,8,9,10], False)
+            if opcion_admin not in [1,2,3,4,5,6,7,8,9,10]:
+                print("Opción no válida. Por favor inténtelo nuevamente...")
+            else:
+                match opcion_admin:
+                    case 1:
+                        input("\n[ADMIN] Ha seleccionado la opción 1. Presione Enter para continuar...")
+                        print("\n" + "=" * 50)
+                        print("   MENÚ DE ADMINISTRADOR - REGISTRO DE USUARIO ")
+                        print("=" * 50)
+                        self.registrar_usuario()
+                    case 2:
+                        while True:
+                            print(
+                                "====================\n"
+                                "  ELIMINAR USUSARIO \n"
+                                "====================\n"
+                            )
+                            try:
+                                id_usuario_eliminar = int(input("Ingrese la identificación del usuario que desea eliminar: "))
+                            except ValueError:
+                                print("Error con la identificación ingresada. Por favor intente de nuevo...")
+                            else:
+                                indice_usuario = func.buscar_usuario(self.arreglo_usuarios, id_usuario_eliminar)
+                                if indice_usuario is not None:
+                                    self.eliminar_usuario(indice_usuario)
+                                    break
+                                else:
+                                    print("\nNo se encontró un usuario con la identificación ingresada.")
+                    case 3:
+                        print("\n" + "=" * 50)
+                        print(" MENÚ DE ADMINISTRADOR - MODIFICACIÓN DE USUARIO ")
+                        print("=" * 50)
+                        input("\n[ADMIN] Ha seleccionado la opción 3. Presione Enter para continuar...")
+                        if self.contador_usuarios == 0:
+                            print("No hay usuarios registrados en el sistema.")
+                        else:
                             user_id = int(input("\nDigite el número de documento del usuario: "))
-                            self.modificar_usuario(user_id)
-                            print("\n"*20)
-                        case 3:
-                            print("\n" + "=" * 50)
-                            print(" MENÚ DE ADMINISTRADOR - REGISTRO DE RECURSO ")
-                            print("=" * 50)
-                            input("\n[ADMIN] Ha seleccionado la opción 3. Presione Enter para continuar...")
-                            self.registrar_recurso()
-                        case 4:
-                            print("\n" + "=" * 50)
-                            print(" MENÚ DE ADMINISTRADOR - INHABILITACIÓN DE RECURSO ")
-                            print("=" * 50)
-                            input("\n[ADMIN] Ha seleccionado la opción 4. Presione Enter para continuar...")
-                            self.inhabilitar_recurso()
-                        case 5:
-                            print("\n" + "=" * 50)
-                            print(" MENÚ DE ADMINISTRADOR - MODIFICACIÓN DE RECURSO ")
-                            print("=" * 50)
-                            input("\n[ADMIN] Ha seleccionado la opción 5. Presione Enter para continuar...")
-                            self.modificar_recurso()
-                        case 6:
-                            input("\n[ADMIN] Se ha cerrado la sesión correctamente. Presione Enter para continuar...")
-                            return
-                        case _:
-                            input("\n[ADMIN] Opción incorrecta. Inténtelo nuevamente. Presione Enter para continuar...")
+                            usuario_encontrado = func.buscar_entidad(self.arreglo_usuarios, user_id)
+                            if not usuario_encontrado:
+                                input("El usuario con número de documento '' no se encuentra registrado en el sistema. "
+                                      " Por favor, intente de nuevo. Presione Enter para volver al menú anterior...")
+                            else:
+                                self.actualizar_datos_usuario(usuario_encontrado)
+                    case 4:
+                        print("\n" + "=" * 50)
+                        print(" MENÚ DE ADMINISTRADOR - REGISTRO DE RECURSO ")
+                        print("=" * 50)
+                        input("\n[ADMIN] Ha seleccionado la opción 4. Presione Enter para continuar...")
+                        self.registrar_recurso()
+                    case 5:
+                        print("\n" + "=" * 50)
+                        print(" MENÚ DE ADMINISTRADOR - INHABILITACIÓN DE RECURSO ")
+                        print("=" * 50)
+                        input("\n[ADMIN] Ha seleccionado la opción 5. Presione Enter para continuar...")
+                        self.inhabilitar_recurso()
+                    case 6:
+                        print("\n" + "=" * 50)
+                        print(" MENÚ DE ADMINISTRADOR - MODIFICACIÓN DE RECURSO ")
+                        print("=" * 50)
+                        input("\n[ADMIN] Ha seleccionado la opción 6. Presione Enter para continuar...")
+                        self.modificar_recurso()
+                    case 7:
+                        print("\n" + "=" * 50)
+                        print(" MENÚ DE ADMINISTRADOR - BUSCADOR DE RECURSOS ")
+                        print("=" * 50)
+                        menu = (
+                            "1. Buscar por título"
+                            "\n2. Buscar por código de inventario")
+
+                        opcion = func.solicitar_opcion_menu(menu,[1,2], True)
+                        if opcion is not None:
+                            match opcion:
+                                case 1:
+                                    self.buscar_recurso_titulo()
+                                case 2:
+                                    self.buscar_recurso_codigo()
+                    case 8:
+                        print("\n" + "=" * 50)
+                        print(" MENÚ DE ADMINISTRADOR - GENERAR PRESTAMO ")
+                        print("=" * 50)
+                        input("\n[ADMIN] Ha seleccionado la opción 8. Presione Enter para continuar...")
+                        self.registrar_prestamo()
+                    case 9:
+                        print("\n" + "=" * 50)
+                        print(" MENÚ DE ADMINISTRADOR - GENERAR DEVOLUCIÓN ")
+                        print("=" * 50)
+                        input("\n[ADMIN] Ha seleccionado la opción 9. Presione Enter para continuar...")
+                        self.registrar_devolucion() 
+                    case 10:
+                        input("\n[ADMIN] Se ha cerrado la sesión correctamente. Presione Enter para continuar...")
+                        return
+                    case _:
+                        input("\n[ADMIN] Opción incorrecta. Inténtelo nuevamente. Presione Enter para continuar...")
 
 
     def iniciar_menu_biblio(self):
