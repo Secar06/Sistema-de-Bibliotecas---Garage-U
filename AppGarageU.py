@@ -862,13 +862,22 @@ class AppGarageU:
                         if self.contador_usuarios == 0:
                             print("No hay usuarios registrados en el sistema.")
                         else:
-                            user_id = int(input("\nDigite el número de documento del usuario: "))
-                            usuario_encontrado = func.buscar_entidad(self.arreglo_usuarios, user_id)
-                            if not usuario_encontrado:
-                                input("El usuario con número de documento '' no se encuentra registrado en el sistema. "
-                                      " Por favor, intente de nuevo. Presione Enter para volver al menú anterior...")
-                            else:
-                                self.actualizar_datos_usuario(usuario_encontrado)
+                            while True:
+                                print("\n" + "=" * 50)
+                                print(" MENÚ DE ADMINISTRADOR - MODIFICACIÓN DE USUARIO ")
+                                print("=" * 50)
+                                try:
+                                    user_id = int(input("\nDigite el número de documento del usuario: "))
+                                except ValueError:
+                                    print("\nError en la entrada de datos. Por favor intente de nuevo...")
+                                else:
+                                    usuario_encontrado = self.arreglo_usuarios[func.buscar_usuario(self.arreglo_usuarios, user_id)]
+                                    if not usuario_encontrado:
+                                        input("El usuario con número de documento '' no se encuentra registrado en el sistema. "
+                                              " Por favor, intente de nuevo. Presione Enter para volver al menú anterior...")
+                                    else:
+                                        if self.actualizar_datos_usuario(usuario_encontrado) is None:
+                                            break
                     case 4:
                         input("\n[ADMIN] Ha seleccionado la opción 4. Presione Enter para continuar...")
                         print("\n" + "=" * 50)
