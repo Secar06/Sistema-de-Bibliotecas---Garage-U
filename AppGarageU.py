@@ -1007,6 +1007,8 @@ class AppGarageU:
                     print(f"\n¡El recurso con número de inventario {recurso.numero_inventario} ha sido inhabilitado correctamente!")
                     print("=" * 50)
                     print(f"Titulo: {recurso.titulo}")
+                    estado = recurso.get_estado()
+                    print(f"Estado del recurso: {estado}")
                     return
 
         print("No se encontró un recurso con ese número de inventario.")
