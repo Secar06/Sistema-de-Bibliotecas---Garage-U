@@ -307,18 +307,27 @@ class AppGarageU:
         RETORNA:
             booleano: Verdadero si se eliminó el usuario con éxito.
         """
-        self.arreglo_usuarios[indice_usuario] = None
-        self.contador_usuarios -= 1
-        for i in range(len(self.arreglo_usuarios)):
-            if self.arreglo_usuarios[i] is None:
-                for j in range(len(self.arreglo_usuarios)-i-1):
-                    self.arreglo_usuarios[i] = self.arreglo_usuarios[i+1]
-                    i += 1
-        if not self.guardar_datos(self.arreglo_usuarios, Usuario.ARCHIVO):
-            print("\nNo se pudo guardar el archivo de usaurios")
-        else:
-            print("\n[ADMIN] ¡Usuario Eliminado Exitosamente!")
-        return True
+        while True:
+            continuar = input("\nSeguro que desea eliminar el usuario? (S/N): ").upper()
+            match continuar:
+                case 'S':
+                    self.arreglo_usuarios[indice_usuario] = None
+                    self.contador_usuarios -= 1
+                    for i in range(len(self.arreglo_usuarios)):
+                        if self.arreglo_usuarios[i] is None:
+                            for j in range(len(self.arreglo_usuarios) - i - 1):
+                                self.arreglo_usuarios[i] = self.arreglo_usuarios[i + 1]
+                                i += 1
+                    if not self.guardar_datos(self.arreglo_usuarios, Usuario.ARCHIVO):
+                        print("\nNo se pudo guardar el archivo de usaurios")
+                    else:
+                        input("\n[ADMIN] ¡Usuario Eliminado Exitosamente! Presione Enter para continuar...")
+                    return True
+                case 'N':
+                    return False
+                case _:
+                    input("\n[ADMIN] Opción incorrecta. Intente nuevamente...")
+
 
     def verificar_usuario(self):
         """
@@ -791,12 +800,12 @@ class AppGarageU:
                         print("=" * 50)
                         self.registrar_usuario()
                     case 2:
+                        input("\n[ADMIN] Ha seleccionado la opción 2. Presione Enter para continuar...")
                         while True:
-                            input("\n[ADMIN] Ha seleccionado la opción 2. Presione Enter para continuar...")
                             print(
-                                "============================================\n"
+                                "\n============================================\n"
                                 " MENÚ DE ADMINISTRADOR - ELIMINAR USUSARIO \n"
-                                "============================================\n"
+                                "============================================"
                             )
                             id_usuario_eliminar = input(
                                 "Ingrese la identificación del usuario que desea eliminar o presione Enter para cancelar: ")
@@ -809,8 +818,8 @@ class AppGarageU:
                             else:
                                 indice_usuario = func.buscar_usuario(self.arreglo_usuarios, id_usuario_eliminar)
                                 if indice_usuario is not None:
-                                    self.eliminar_usuario(indice_usuario)
-                                    break
+                                    if self.eliminar_usuario(indice_usuario):
+                                        break
                                 else:
                                     print("\nNo se encontró un usuario con la identificación ingresada.")
                     case 3:
