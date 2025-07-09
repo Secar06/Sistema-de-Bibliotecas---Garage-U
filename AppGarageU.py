@@ -667,8 +667,6 @@ class AppGarageU:
 
     def mostrar_top5(self):
         print("\n Top 5 recursos más prestados: \n")
-        """top = {k: v for k, v in sorted(self.arreglo_recursos() key=lambda , reverse = True)}
-        top = {k: v for k, v in sorted(self.arreglo_recursos.items(), key=lambda item: item[1], reverse=True)}"""
         top = sorted(self.arreglo_recursos, key=lambda recurso: recurso.titulo, reverse=True)
 
         if not top:
@@ -685,10 +683,10 @@ class AppGarageU:
         print(f"\n Historial del usuario {self.usuario}: \n")
         if not self.historial_usuarios:
             print("Este usuario no ha realizado ningún préstamo")
-        return
-        for evento in self.historial_usuarios:
-             fecha = evento["fecha"].strftime("%Y-%m-%d %H:%M:%S")
-             print(f"- [{fecha}] {evento['accion'].capitalize()} por {evento['persona']}")
+        else:
+            for evento in self.historial_usuarios:
+                fecha = evento["fecha"].strftime("%Y-%m-%d %H:%M:%S")
+                print(f"- [{fecha}] {evento['accion'].capitalize()} por {evento['persona']}")
 
     def registrar_devolucion(self):
         while True:
@@ -707,7 +705,15 @@ class AppGarageU:
             prestamo = self.arreglo_prestamos[i]
             if buscar_cod == prestamo.cod_recurso and buscar_id == prestamo.id_usuario:
                 mora = self.calcular_mora(prestamo.fecha_devolucion_estimada)
-                prestamo.fecha_devolucion = date.today()
+                while True:
+                    fecha_str = input("Ingrese la fecha de devolución (en formato AAAA-MM-DD): ").strip()
+                    try:
+                        fecha_ingresada = date.fromisoformat(fecha_str)
+                        prestamo.fecha_devolucion = fecha_ingresada
+                        break
+                    except ValueError:
+                        print("Formato incorrecto. Por favor ingrese la fecha en formato AAAA-MM-DD.")
+
                 if mora > 0:
                     print(f"El usuario debe {mora} pesos por retraso en la devolucion")
                 else:
