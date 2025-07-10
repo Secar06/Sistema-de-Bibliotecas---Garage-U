@@ -36,12 +36,12 @@ def solicitar_opcion_menu(menu, lista, salir = bool):
                 return None
         else:
             opcion_usuario = input("Seleccione una opcion del menú: ")
-            try:
-                opcion_usuario = int(opcion_usuario)
-            except ValueError:
-                input("\nEl tipo de dato ingresado es erróneo, presione Enter e intente nuevamente...")
+        try:
+            opcion_usuario = int(opcion_usuario)
+        except ValueError:
+            input("\nEl tipo de dato ingresado es erróneo, presione Enter e intente nuevamente...")
+        else:
+            if opcion_usuario in lista:
+                return opcion_usuario
             else:
-                if opcion_usuario in lista:
-                    return opcion_usuario
-                else:
-                    input("\nLa opcion ingresada es incorrecta, presione Enter e intente nuevamente...")
+                input("\nLa opcion ingresada es incorrecta, presione Enter e intente nuevamente...")

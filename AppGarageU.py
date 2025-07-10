@@ -398,6 +398,7 @@ class AppGarageU:
                 "     MENÚ DE ADMINISTRADOR    \n"
                 "=============================="
             while True:
+                recurso = object
                 try:
                     tipo_recurso = int(input(
                             "      Registro de Recurso    \n"
@@ -405,44 +406,44 @@ class AppGarageU:
                             "1. Libro\n"
                             "2. Revista\n"
                             "3. Video\n"
-                            "4. Audio: "))
-                    break
+                            "4. Audio\n"
+                            "Seleccione una opción del menú: "))
                 except ValueError:
                     print("Error. intente nuevamente.")
+                else:
+                    if tipo_recurso is None:
+                        return
+                    else:
+                        match tipo_recurso:
+                            case 1:
+                                recurso = Libro()
+                                recurso.tipo_recurso = tipo_recurso
+                                recurso = self.crear_recurso(recurso)
+                            case 2:
+                                recurso = Revista()
+                                recurso.tipo_recurso = tipo_recurso
+                                recurso = self.crear_recurso(recurso)
+                            case 3:
+                                recurso = Video()
+                                recurso.tipo_recurso = tipo_recurso
+                                recurso = self.crear_recurso(recurso)
+                            case 4:
+                                recurso = Audio()
+                                recurso.tipo_recurso = tipo_recurso
+                                recurso  = self.crear_recurso(recurso)
 
-            if tipo_recurso is None:
-                return
-            else:
-                match tipo_recurso:
-                    case 1:
-                        recurso = Libro()
-                        recurso = self.crear_recurso(Libro())
-                        recurso.tipo_recurso = tipo_recurso
-                    case 2:
-                        recurso = Revista()
-                        recurso = self.crear_recurso(Revista())
-                        recurso.tipo_recurso = tipo_recurso
-                    case 3:
-                        recurso = Video()
-                        recurso = self.crear_recurso(Video())
-                        recurso.tipo_recurso = tipo_recurso
-                    case 4:
-                        recurso = Audio()
-                        recurso  = self.crear_recurso(Audio())
-                        recurso.tipo_recurso = tipo_recurso
-                
-                recurso.mostrar_datos()
+                        recurso.mostrar_datos()
 
-                coleccion = recurso.get_coleccion()
-                print(f"Colección del recurso: {coleccion}")
+                        coleccion = recurso.get_coleccion()
+                        print(f"Colección del recurso: {coleccion}")
 
-                estado = recurso.get_estado()
-                print(f"Estado del recurso: {estado}")
+                        estado = recurso.get_estado()
+                        print(f"Estado del recurso: {estado}")
 
-                tipo_recurso = recurso.get_tipo_recurso()
-                print(f"Tipo de recurso: {tipo_recurso}")
-                print("=" * 50)
-
+                        tipo_recurso = recurso.get_tipo_recurso()
+                        print(f"Tipo de recurso: {tipo_recurso}")
+                        print("=" * 50)
+                        return
     # MÉTODO INICIAR MENÚ USUARIO DUPLICADO
     # def iniciar_menu_usuario(self):
     #     """
@@ -596,13 +597,13 @@ class AppGarageU:
                 "  BUSCAR RECURSO POR TITÚLO \n"
                 "============================="
             )
-            texto = input("\nIngrese el título o parte de él del recurso a buscar: ")
+            texto = input("Ingrese el título o parte de él del recurso a buscar: ").lower()
             cont = 0
-            for i in range(self.MAX_RECURSOS):
+            for i in range(len(self.arreglo_recursos)):
                 recurso = self.arreglo_recursos[i]
-                if recurso == None:
+                if recurso is None:
                     break
-                titulo = recurso.titulo
+                titulo = recurso.titulo.lower()
                 if texto in titulo:
                     cont += 1
                     recurso.mostrar_datos()
@@ -616,8 +617,8 @@ class AppGarageU:
                     print(f"Tipo de recurso: {tipo_recurso}")
                     print("=" * 50)
                     print("\n")
-                if cont == 0:
-                    print(f"No se encontró ningún resultado con '{texto}'.\n")
+            if cont == 0:
+                input(f"\nNo se encontró ningún resultado con '{texto}'. Presione Enter para continuar...")
         else:
             input("\n No se encuentra ningún recurso guardado. Presione Enter para continuar")
 
@@ -631,7 +632,7 @@ class AppGarageU:
             )
             while True:
                 try:
-                    cod = int(input("\nIngrese el código de inventario del recurso a buscar: "))
+                    cod = int(input("Ingrese el código de inventario del recurso a buscar: "))
                     break
                 except ValueError:
                     print("Error, intente nuevamente.")
@@ -649,9 +650,9 @@ class AppGarageU:
                 print("=" * 50)
                 print("\n")
             else:
-                print(f"No se encontró ningún resultado con '{cod}'.\n")
+                input(f"\nNo se encontró ningún resultado con '{cod}'. Presione Enter para continuar...")
         else:
-            input("\n No se encuentra ningún recurso guardado. Presione Enter para continuar")
+            input("\nNo se encuentra ningún recurso guardado. Presione Enter para continuar")
 
     def mostrar_historial_recurso(self):
         print(f"\nHistorial del recurso ... :")
@@ -841,7 +842,6 @@ class AppGarageU:
                         print("   MENÚ DE ADMINISTRADOR - ELIMINAR USUARIO")
                         print("=" * 50)
                         while True:
-                            input("\n[ADMIN] Ha seleccionado la opción 2. Presione Enter para continuar...")
                             print(
                                 "\n============================================\n"
                                 " MENÚ DE ADMINISTRADOR - ELIMINAR USUSARIO \n"
@@ -892,44 +892,35 @@ class AppGarageU:
                         print("\n" + "=" * 50)
                         print(" MENÚ DE ADMINISTRADOR - REGISTRO DE RECURSO ")
                         print("=" * 50)
-                        input("\n[ADMIN] Ha seleccionado la opción 4. Presione Enter para continuar...")
                         self.registrar_recurso()
                     case 5:
                         input("\n[ADMIN] Ha seleccionado la opción 5. Presione Enter para continuar...")
                         print("\n" + "=" * 50)
                         print(" MENÚ DE ADMINISTRADOR - INHABILITACIÓN DE RECURSO ")
                         print("=" * 50)
-                        input("\n[ADMIN] Ha seleccionado la opción 5. Presione Enter para continuar...")
                         self.inhabilitar_recurso()
                     case 6:
                         input("\n[ADMIN] Ha seleccionado la opción 6. Presione Enter para continuar...")
                         print("\n" + "=" * 50)
                         print(" MENÚ DE ADMINISTRADOR - MODIFICACIÓN DE RECURSO ")
                         print("=" * 50)
-                        input("\n[ADMIN] Ha seleccionado la opción 6. Presione Enter para continuar...")
                         self.modificar_recurso()
                     case 7:
                         input("\n[ADMIN] Ha seleccionado la opción 7. Presione Enter para continuar...")
-                        input("\n[ADMIN] Ha seleccionado la opción 7. Presione Enter para continuar...")
-                        print("\n" + "=" * 50)
-                        print(" MENÚ DE ADMINISTRADOR - BUSCADOR DE RECURSOS ")
-                        print("=" * 50)
-                        while True:
-                            try:
-                                menu = int(input(
-                                    "1. Buscar por título"
-                                    "\n2. Buscar por código de inventario: "))
-                                break
-                            except ValueError:
-                                print("Error, intente nuevamente.")
-
-                        menu
-                        if menu is not None:
-                            match menu:
-                                case 1:
-                                    self.buscar_recurso_titulo()
-                                case 2:
-                                    self.buscar_recurso_codigo()
+                        menu = (
+                        "==============================================\n"
+                        " MENÚ DE ADMINISTRADOR - BUSCADOR DE RECURSOS \n"
+                        "==============================================\n"
+                        "1. Buscar por título"
+                        "\n2. Buscar por código de inventario ")
+                        opcion = func.solicitar_opcion_menu(menu, [1,2], True)
+                        if opcion is None:
+                            break
+                        match opcion:
+                            case 1:
+                                self.buscar_recurso_titulo()
+                            case 2:
+                                self.buscar_recurso_codigo()
                     case 8:
                         input("\n[ADMIN] Ha seleccionado la opción 8. Presione Enter para continuar...")
                         print("\n" + "=" * 50)
@@ -989,9 +980,6 @@ class AppGarageU:
         """
         numero = int
         while True:
-            print("\n" + "=" * 50)
-            print("      ADMINISTRACIÓN - INHABILITAR RECURSO")
-            print("=" * 50)
             numero = (input(
                     "Ingrese el número de inventario del recurso que desea inhabilitar o presione Enter para cancelar: "
                     ))
