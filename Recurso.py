@@ -46,11 +46,11 @@ class Recurso:
             case 1:
                 return "Libro"
             case 2:
-                return "Video"
-            case 3:
-                return "Audio"
-            case 4:
                 return "Revista"
+            case 3:
+                return "Video"
+            case 4:
+                return "Audio"
 
 
     def get_id(self):
