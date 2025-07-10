@@ -9,7 +9,7 @@ from Recurso import Recurso
 from datetime import date, timedelta
 from collections import Counter
 import funcionalidades as func
-
+"hola"
 class AppGarageU:
     """ En esta clase llamada AppGarageU se lleva a cabo las funcionalidades del programa, como registrar un nuevo usuario, verificar el usuario,
     añadir nuevos recursos, entre otros
