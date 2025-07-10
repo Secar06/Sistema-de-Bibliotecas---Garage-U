@@ -10,7 +10,7 @@ from Historial_usuarios import Historial_usuarios
 from datetime import date, timedelta
 from collections import Counter
 import funcionalidades as func
-"hola"
+
 class AppGarageU:
     """ En esta clase llamada AppGarageU se lleva a cabo las funcionalidades del programa, como registrar un nuevo usuario, verificar el usuario,
     añadir nuevos recursos, entre otros
@@ -407,7 +407,6 @@ class AppGarageU:
                 "     MENÚ DE ADMINISTRADOR    \n"
                 "=============================="
             while True:
-                recurso = object
                 try:
                     tipo_recurso = int(input(
                             "      Registro de Recurso    \n"
@@ -415,39 +414,39 @@ class AppGarageU:
                             "1. Libro\n"
                             "2. Revista\n"
                             "3. Video\n"
-                            "4. Audio\n"
-                            "Seleccione una opción del menú: "))
+                            "4. Audio: "))
+                    break
                 except ValueError:
                     print("Error. intente nuevamente.")
-                else:
-                    if tipo_recurso is None:
-                        return
-                    else:
-                        match tipo_recurso:
-                            case 1:
-                                recurso = Libro()
-                                recurso.tipo_recurso = tipo_recurso
-                                recurso = self.crear_recurso(recurso)
-                            case 2:
-                                recurso = Revista()
-                                recurso.tipo_recurso = tipo_recurso
-                                recurso = self.crear_recurso(recurso)
-                            case 3:
-                                recurso = Video()
-                                recurso.tipo_recurso = tipo_recurso
-                                recurso = self.crear_recurso(recurso)
-                            case 4:
-                                recurso = Audio()
-                                recurso.tipo_recurso = tipo_recurso
-                                recurso  = self.crear_recurso(recurso)
 
-                        recurso.mostrar_datos()
+            if tipo_recurso is None:
+                return
+            else:
+                match tipo_recurso:
+                    case 1:
+                        recurso = Libro()
+                        recurso = self.crear_recurso(Libro())
+                        recurso.tipo_recurso = tipo_recurso
+                    case 2:
+                        recurso = Revista()
+                        recurso = self.crear_recurso(Revista())
+                        recurso.tipo_recurso = tipo_recurso
+                    case 3:
+                        recurso = Video()
+                        recurso = self.crear_recurso(Video())
+                        recurso.tipo_recurso = tipo_recurso
+                    case 4:
+                        recurso = Audio()
+                        recurso  = self.crear_recurso(Audio())
+                        recurso.tipo_recurso = tipo_recurso
+                
+                recurso.mostrar_datos()
 
-                        coleccion = recurso.get_coleccion()
-                        print(f"Colección del recurso: {coleccion}")
+                coleccion = recurso.get_coleccion()
+                print(f"Colección del recurso: {coleccion}")
 
-                        estado = recurso.get_estado()
-                        print(f"Estado del recurso: {estado}")
+                estado = recurso.get_estado()
+                print(f"Estado del recurso: {estado}")
 
                 tipo_recurso = recurso.get_tipo_recurso()
                 print(f"Tipo de recurso: {tipo_recurso}")
@@ -583,11 +582,12 @@ class AppGarageU:
                 prestamo.indice_prestamo = self.contador_prestamos + 1
                 prestamo.cod_recurso = buscar_cod
                 prestamo.id_usuario = buscar_id
-                Usuario = func.buscar_entidad(self.arreglo_usuarios,buscar_id)
+                usuario = func.buscar_entidad(self.arreglo_usuarios,buscar_id)
                 prestamo.fecha_prestamo = date.today()
                 prestamo.fecha_devolucion_estimada = self.calcular_fecha_devolucion(buscar_cod, buscar_id)
                 self.arreglo_prestamos[self.contador_prestamos] = prestamo
                 self.contador_prestamos += 1
+                recurso = func.buscar_entidad(self.arreglo_recursos, buscar_cod)
                 if not self.guardar_datos(self.arreglo_prestamos, Prestamo.ARCHIVO):
                     print("No se pudo guardar el archivo de prestamos")
                 else:
@@ -595,10 +595,16 @@ class AppGarageU:
                         historial_usuarios = Historial_usuarios()
                         historial_usuarios.fecha = date.today()
                         historial_usuarios.accion = "prestado"
-                        historial_usuarios.persona = Usuario.nombre
-                        self.historial_recursos[self.contador_historial_usuarios] = historial_usuarios
+                        historial_usuarios.usuario = usuario.nombre
+                        historial_usuarios.id_usuario = usuario.identificacion
+                        historial_usuarios.nombre_recurso = recurso.titulo
+                        self.historial_usuarios[self.contador_historial_usuarios] = historial_usuarios
                         self.contador_historial_usuarios += 1
-                        self.guardar_datos(self.historial_recursos, "historial_recursos")
+                        self.guardar_datos(self.historial_usuarios, "historial_usuarios.npy")
+                        """ historial_recurso = Historial_recursos()
+                        historial_recurso.accion = "PRESTADO"
+                        historial_recurso.fecha = 
+                        historial_recurso.usuario_nombre = Historial_recursos.usuario_nombre"""
                     print(f"La fecha del prestamo es: {prestamo.fecha_prestamo.strftime("%d") + " " + prestamo.fecha_prestamo.strftime("%B") + " " + prestamo.fecha_prestamo.strftime("%Y")}")
                     print(f"\n¡El prestamo con id {prestamo.indice_prestamo} ha sido registrado correctamente!")
                     input("Presione Enter para continuar...")
@@ -611,13 +617,13 @@ class AppGarageU:
                 "  BUSCAR RECURSO POR TITÚLO \n"
                 "============================="
             )
-            texto = input("Ingrese el título o parte de él del recurso a buscar: ").lower()
+            texto = input("\nIngrese el título o parte de él del recurso a buscar: ")
             cont = 0
-            for i in range(len(self.arreglo_recursos)):
+            for i in range(self.MAX_RECURSOS):
                 recurso = self.arreglo_recursos[i]
-                if recurso is None:
+                if recurso == None:
                     break
-                titulo = recurso.titulo.lower()
+                titulo = recurso.titulo
                 if texto in titulo:
                     cont += 1
                     recurso.mostrar_datos()
@@ -631,8 +637,8 @@ class AppGarageU:
                     print(f"Tipo de recurso: {tipo_recurso}")
                     print("=" * 50)
                     print("\n")
-            if cont == 0:
-                input(f"\nNo se encontró ningún resultado con '{texto}'. Presione Enter para continuar...")
+                if cont == 0:
+                    print(f"No se encontró ningún resultado con '{texto}'.\n")
         else:
             input("\n No se encuentra ningún recurso guardado. Presione Enter para continuar")
 
@@ -646,7 +652,7 @@ class AppGarageU:
             )
             while True:
                 try:
-                    cod = int(input("Ingrese el código de inventario del recurso a buscar: "))
+                    cod = int(input("\nIngrese el código de inventario del recurso a buscar: "))
                     break
                 except ValueError:
                     print("Error, intente nuevamente.")
@@ -664,18 +670,25 @@ class AppGarageU:
                 print("=" * 50)
                 print("\n")
             else:
-                input(f"\nNo se encontró ningún resultado con '{cod}'. Presione Enter para continuar...")
+                print(f"No se encontró ningún resultado con '{cod}'.\n")
         else:
-            input("\nNo se encuentra ningún recurso guardado. Presione Enter para continuar")
+            input("\n No se encuentra ningún recurso guardado. Presione Enter para continuar")
 
     def mostrar_historial_recurso(self):
-        print(f"\nHistorial del recurso ... :")
-        if not self.historial_recursos:
-            print("Aún no ha sido prestado.")
-            return
-        for evento in self.historial_recursos:
-            fecha = evento["fecha"].strftime("%Y-%m-%d %H:%M:%S")
-            print(f"- [{fecha}] {evento['accion'].capitalize()} por {evento['persona']}")
+        contador_prestamo_usuario = 0
+        while True:
+            try:
+                cod = int(input(f"Ingrese el código de inventario al cual necesita ver su historial: "))
+                break
+            except ValueError:
+                print("Error. Intente de nuevo")    
+        print(f"El recurso con código {cod} fue prestado por:\n")
+        for i in range(self.MAX_HISTORIAL_USUARIOS):
+            historial = self.historial_usuarios[i]
+            if cod == historial.recursoid: 
+                contador_prestamo_usuario +=1
+                print(f"Préstamo {contador_prestamo_usuario}")
+                historial.mostrar_datos_recurso()
 
     def veces_prestado(self):
         return sum(1 for evento in self.historial_recursos if evento["accion"] == "prestado")
@@ -694,15 +707,21 @@ class AppGarageU:
         contador = Counter(top)
         return contador.most_common(5)
         
-    """ def mostrar_historial_usuario(self):
-        print(f"\n Historial del usuario {self.usuario}: \n")
-        if not self.historial_usuarios:
-            print("Este usuario no ha realizado ningún préstamo")
-        else:
-            for evento in self.historial_usuarios:
-                fecha = evento["fecha"].strftime("%Y-%m-%d %H:%M:%S")
-                print(f"- [{fecha}] {evento['accion'].capitalize()} por {evento['persona']}")"""
-
+    def mostrar_historial_usuario(self):
+        contador_prestamo_usuario = 0
+        while True:
+            try:
+                id = int(input(f"Ingrese el ID del usuario al cual necesita ver su historial: "))
+                break
+            except ValueError:
+                print("Error. Intente de nuevo")    
+        print(f"El usuario con ID {id} prestó:\n")
+        for i in range(self.MAX_HISTORIAL_USUARIOS):
+            historial = self.historial_usuarios[i]
+            if id == historial.id_usuario: 
+                contador_prestamo_usuario +=1
+                print(f"Préstamo {contador_prestamo_usuario}")
+                historial.mostrar_datos_usuario()
     def registrar_devolucion(self):
         while True:
             try:
@@ -741,6 +760,12 @@ class AppGarageU:
                         if persona.identificacion == buscar_id:
                             persona.multa = mora
                             self.arreglo_usuarios[i] = persona
+                            for i in range (self.MAX_HISTORIAL_USUARIOS): 
+                                historial = self.historial_usuarios[i]
+                                if buscar_id == historial.id_usuario and buscar_cod == historial.recursoid and historial.fecha == prestamo.fecha_prestamo:
+                                    historial.fecha_devolucion = fecha_ingresada
+                                    historial.multa = mora
+                                    self.historial_usuarios[i] = historial
                             if not self.guardar_datos(self.arreglo_usuarios, Usuario.ARCHIVO):
                                 print("No se pudo guardar el archivo de usaurios")
                             else:
@@ -850,12 +875,10 @@ class AppGarageU:
                     "9. Generar devolución\n"
                     "10. Consultar historial de prestamos de un recurso\n"
                     "11. Consultar historial de prestamos de un usuario\n"
-                    "12. Top 5 recursos mas prestados\n"
-                    "13. Generar listado de los usuarios morosos\n"
-                    "14. Cerrar sesión")
+                    "12. Cerrar sesión")
 
-            opcion_admin = func.solicitar_opcion_menu(menu,[1,2,3,4,5,6,7,8,9,10,11,12,13,14], False)
-            if opcion_admin not in [1,2,3,4,5,6,7,8,9,10,11,12,13,14]:
+            opcion_admin = func.solicitar_opcion_menu(menu,[1,2,3,4,5,6,7,8,9,10,11,12], False)
+            if opcion_admin not in [1,2,3,4,5,6,7,8,9,10,11,12]:
                 print("Opción no válida. Por favor inténtelo nuevamente...")
             else:
                 match opcion_admin:
@@ -867,6 +890,7 @@ class AppGarageU:
                         self.registrar_usuario()
                     case 2:
                         while True:
+                            input("\n[ADMIN] Ha seleccionado la opción 2. Presione Enter para continuar...")
                             print(
                                 "\n============================================\n"
                                 " MENÚ DE ADMINISTRADOR - ELIMINAR USUSARIO \n"
@@ -911,16 +935,19 @@ class AppGarageU:
                         print("\n" + "=" * 50)
                         print(" MENÚ DE ADMINISTRADOR - REGISTRO DE RECURSO ")
                         print("=" * 50)
+                        input("\n[ADMIN] Ha seleccionado la opción 4. Presione Enter para continuar...")
                         self.registrar_recurso()
                         print("\n" + "=" * 50)
                         print(" MENÚ DE ADMINISTRADOR - INHABILITACIÓN DE RECURSO ")
                         print("=" * 50)
+                        input("\n[ADMIN] Ha seleccionado la opción 5. Presione Enter para continuar...")
                         self.inhabilitar_recurso()
                     case 6:
                         input("\n[ADMIN] Ha seleccionado la opción 6. Presione Enter para continuar...")
                         print("\n" + "=" * 50)
                         print(" MENÚ DE ADMINISTRADOR - MODIFICACIÓN DE RECURSO ")
                         print("=" * 50)
+                        input("\n[ADMIN] Ha seleccionado la opción 6. Presione Enter para continuar...")
                         self.modificar_recurso()
                     case 7:
                         input("\n[ADMIN] Ha seleccionado la opción 7. Presione Enter para continuar...")
@@ -966,20 +993,8 @@ class AppGarageU:
                         print(" MENÚ DE ADMINISTRADOR - CONSULTAR HISTORIAL DE PRESTAMOS USUARIO ")
                         input("\n[ADMIN] Ha seleccionado la opción 11. Presione Enter para continuar...")
                         print("=" * 50)
-                        self.mostrar_historial_usuario()
+                        self.mostrar_historial_usuario() 
                     case 12:
-                        print("\n" + "=" * 50)
-                        print(" MENÚ DE ADMINISTRADOR - CONSULTAR HISTORIAL DE PRESTAMOS USUARIO ")
-                        input("\n[ADMIN] Ha seleccionado la opción 12. Presione Enter para continuar...")
-                        print("=" * 50)
-                        self.mostrar_top5()
-                    case 13:
-                        print("\n" + "=" * 50)
-                        print(" MENÚ DE ADMINISTRADOR - CONSULTAR HISTORIAL DE PRESTAMOS USUARIO ")
-                        input("\n[ADMIN] Ha seleccionado la opción 13. Presione Enter para continuar...")
-                        print("=" * 50)
-                        self.listado_morosos()
-                    case 14:
                         input("\n[ADMIN] Se ha cerrado la sesión correctamente. Presione Enter para continuar...")
                         return
                     case _:
@@ -1024,6 +1039,9 @@ class AppGarageU:
         """
         numero = int
         while True:
+            print("\n" + "=" * 50)
+            print("      ADMINISTRACIÓN - INHABILITAR RECURSO")
+            print("=" * 50)
             numero = (input(
                     "Ingrese el número de inventario del recurso que desea inhabilitar o presione Enter para cancelar: "
                     ))
