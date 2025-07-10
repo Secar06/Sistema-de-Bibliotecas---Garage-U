@@ -49,6 +49,9 @@ class Usuario():
         self.tipo_usuario = tipo_usuario
         self.perfil_usuario = perfil_usuario
 
+    def get_id(self):
+        return self.identificacion
+
     @property
     def nombre(self):
         return self._nombre
