@@ -849,10 +849,12 @@ class AppGarageU:
                     "9. Generar devolución\n"
                     "10. Consultar historial de prestamos de un recurso\n"
                     "11. Consultar historial de prestamos de un usuario\n"
-                    "12. Cerrar sesión")
+                    "12. Top 5 recursos mas prestados\n"
+                    "13. Generar listado de los usuarios morosos\n"
+                    "14. Cerrar sesión")
 
-            opcion_admin = func.solicitar_opcion_menu(menu,[1,2,3,4,5,6,7,8,9,10,11,12], False)
-            if opcion_admin not in [1,2,3,4,5,6,7,8,9,10,11,12]:
+            opcion_admin = func.solicitar_opcion_menu(menu,[1,2,3,4,5,6,7,8,9,10,11,12,13,14], False)
+            if opcion_admin not in [1,2,3,4,5,6,7,8,9,10,11,12,13,14]:
                 print("Opción no válida. Por favor inténtelo nuevamente...")
             else:
                 match opcion_admin:
@@ -967,8 +969,20 @@ class AppGarageU:
                         print(" MENÚ DE ADMINISTRADOR - CONSULTAR HISTORIAL DE PRESTAMOS USUARIO ")
                         input("\n[ADMIN] Ha seleccionado la opción 11. Presione Enter para continuar...")
                         print("=" * 50)
-                        self.mostrar_historial_usuario() 
+                        self.mostrar_historial_usuario()
                     case 12:
+                        print("\n" + "=" * 50)
+                        print(" MENÚ DE ADMINISTRADOR - CONSULTAR HISTORIAL DE PRESTAMOS USUARIO ")
+                        input("\n[ADMIN] Ha seleccionado la opción 12. Presione Enter para continuar...")
+                        print("=" * 50)
+                        self.mostrar_top5()
+                    case 13:
+                        print("\n" + "=" * 50)
+                        print(" MENÚ DE ADMINISTRADOR - CONSULTAR HISTORIAL DE PRESTAMOS USUARIO ")
+                        input("\n[ADMIN] Ha seleccionado la opción 13. Presione Enter para continuar...")
+                        print("=" * 50)
+                        self.listado_morosos()
+                    case 14:
                         input("\n[ADMIN] Se ha cerrado la sesión correctamente. Presione Enter para continuar...")
                         return
                     case _:
